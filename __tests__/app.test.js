@@ -76,44 +76,43 @@ describe("all tests", () => {
   });
 
   describe("5-GET:/api/reviews/:review_id", () => {
-    // it("responds with a status code of 200", () => {
-    //   return request(app).get("/api/reviews/1").expect(200);
-    // });
-    // it("responds with an error code of 404-Not found if the review_id does not exist", () => {
-    //   return request(app).get("/api/reviews/100000").expect(404);
-    // });
-    // it("responds with an error code of 400-Bad request if the review_id is not an id", () => {
-    //   return request(app).get("/api/reviews/NotAnId").expect(400);
-    // });
-    // it(`responds with 1 review object with these properties:
-    //         review_id
-    //         title
-    //         review_body
-    //         designer
-    //         review_img_url
-    //         votes
-    //         category
-    //         owner
-    //         created_at
-    // `, () => {
-    //   return request(app)
-    //     .get("/api/reviews/1")
-    //     .expect(200)
-    //     .then((response) => {
-    //       const review = response.body.review;
-    //       expect(typeof review).toBe("object");
-    //       expect(Array.isArray(review)).toBe(false);
-    //       expect(review).toHaveProperty(keyPath, value);
-    //       expect(review).toHaveProperty("review_id");
-    //       expect(review).toHaveProperty("title");
-    //       expect(review).toHaveProperty("review_body");
-    //       expect(review).toHaveProperty("designer");
-    //       expect(review).toHaveProperty("review_img_url");
-    //       expect(review).toHaveProperty("votes");
-    //       expect(review).toHaveProperty("category");
-    //       expect(review).toHaveProperty("owner");
-    //       expect(review).toHaveProperty("created_at");
-    //     });
-    // });
+    it("responds with a status code of 200", () => {
+      return request(app).get("/api/reviews/1").expect(200);
+    });
+    it("responds with an error code of 404-Not found if the review_id does not exist", () => {
+      return request(app).get("/api/reviews/100000").expect(404);
+    });
+    it("responds with an error code of 400-Bad request if the review_id is not an id", () => {
+      return request(app).get("/api/reviews/NotAnId").expect(400);
+    });
+    it(`responds with 1 review object with these properties:
+            review_id
+            title
+            review_body
+            designer
+            review_img_url
+            votes
+            category
+            owner
+            created_at
+    `, () => {
+      return request(app)
+        .get("/api/reviews/1")
+        .expect(200)
+        .then((response) => {
+          const review = response.body.review;
+          expect(typeof review).toBe("object");
+          expect(Array.isArray(review)).toBe(false);
+          expect(review).toHaveProperty("review_id");
+          expect(review).toHaveProperty("title");
+          expect(review).toHaveProperty("review_body");
+          expect(review).toHaveProperty("designer");
+          expect(review).toHaveProperty("review_img_url");
+          expect(review).toHaveProperty("votes");
+          expect(review).toHaveProperty("category");
+          expect(review).toHaveProperty("owner");
+          expect(review).toHaveProperty("created_at");
+        });
+    });
   });
 });
