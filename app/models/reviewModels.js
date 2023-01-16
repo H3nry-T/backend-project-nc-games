@@ -39,4 +39,31 @@ const fetchReviewById = (review_id) => {
       }
     });
 };
-module.exports = { fetchAllReviews, fetchReviewById };
+
+const fetchCommentsByReviewId = (review_id) => {
+  const selectValues = [review_id];
+
+  return db
+    .query(
+      `
+      SELECT comment_id, comments.votes, comments.created_at, author, body, comments.review_id
+      FROM reviews
+      JOIN comments 
+      ON comments.review_id = reviews.review_id
+      WHERE reviews.review_id = $1
+      ORDER BY comments.created_at DESC;
+  `,
+      selectValues
+    )
+    .then((result) => {
+      const comments = result.rows;
+      if (comments.length < 1) {
+        return Promise.reject({ code: 404, msg: "Not found" });
+      } else if (comments === undefined) {
+        return Promise.reject({ code: 204, msg: "no content" });
+      } else {
+        return comments;
+      }
+    });
+};
+module.exports = { fetchAllReviews, fetchReviewById, fetchCommentsByReviewId };
