@@ -1,5 +1,15 @@
 # Northcoders House of Games API
 
+## Introduction
+
+<ul> 
+    <li>Users must create their own .env.* files to successfully connect to their local database.</li>
+    <li>The two databases can be created using "npm run setup-dbs"</li>
+    <li>The env files must contain the variable PGDATABASE=your_database_name</li>
+    <li>The development database is "nc_games"</li>
+    <li>The testing database is "nc_games_test"</li>
+</ul>
+
 ## Background
 
 We will be building an API for the purpose of accessing application data programmatically. The intention here is to mimic the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
