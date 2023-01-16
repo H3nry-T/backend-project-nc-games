@@ -115,4 +115,39 @@ describe("all tests", () => {
         });
     });
   });
+
+  //   describe("6-GET:/api/reviews/:review_id/comments", () => {
+  //     it("responds with a status code of 200", () => {
+  //       return request(app).get("/api/reviews/2/comments").expect(200);
+  //     });
+  //     it("responds with an error code of 404-Not found if the review_id does not exist", () => {
+  //       return request(app).get("/api/reviews/100000/comments").expect(404);
+  //     });
+  //     it("responds with an error code of 400-Bad request if the review_id is not an id", () => {
+  //       return request(app).get("/api/reviews/NotAnId/comments").expect(400);
+  //     });
+  //     it(`responds with 1 review object with these properties:
+  //             comment_id
+  //             votes
+  //             created_at
+  //             author
+  //             body
+  //             review_id
+  //     `, () => {
+  //       return request(app)
+  //         .get("/api/reviews/2/comments")
+  //         .expect(200)
+  //         .then((response) => {
+  //           const review = response.body.review;
+  //           expect(typeof review).toBe("object");
+  //           expect(Array.isArray(review)).toBe(false);
+  //           expect(review).toHaveProperty(comment_id);
+  //           expect(review).toHaveProperty(votes);
+  //           expect(review).toHaveProperty(created_at);
+  //           expect(review).toHaveProperty(author);
+  //           expect(review).toHaveProperty(body);
+  //           expect(review).toHaveProperty(review_id);
+  //         });
+  //     });
+  //   });
 });
