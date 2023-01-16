@@ -1,11 +1,13 @@
 const express = require("express");
 const { getAllCategories } = require("./controllers/categoryControllers");
-
+const { getAllReviews } = require("./controllers/reviewControllers");
 const app = express();
 
 app.get("/api/categories", getAllCategories);
 
-//GET:/api/categories 204 no content error
+app.get("/api/reviews", getAllReviews);
+
+//GET:/api/"something" 204 no content error
 app.use((error, request, response, next) => {
   if (error.code === 204) {
     console.log(error);
@@ -15,7 +17,7 @@ app.use((error, request, response, next) => {
   }
 });
 
-//GET:/api/categories 500 internal server error
+//GET:/api/"something" 500 internal server error
 app.use((error, request, response, next) => {
   if (error) {
     // console.log(error); //debug console.log
