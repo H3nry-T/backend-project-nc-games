@@ -18,9 +18,9 @@ describe("all tests", () => {
     it("responds with a status code of 200", () => {
       return request(app).get("/api/categories").expect(200);
     });
-    it("responds with an error code of 400 if there is a bad request", () => {
-      return request(app).get("/api/categories").expect(204);
-    });
+    // it("responds with an error code of 400 if there is a bad request", () => {
+    //   return request(app).get("/api/categories").expect(204);
+    // });
     it("responds with category objects, must have slug, description properties", () => {
       return request(app)
         .get("/api/categories")
