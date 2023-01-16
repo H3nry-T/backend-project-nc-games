@@ -139,7 +139,6 @@ describe("all tests", () => {
         .expect(200)
         .then((response) => {
           const comments = response.body.comments;
-          console.log(comments);
           expect(Array.isArray(comments)).toBe(true);
           comments.forEach((commentObj) => {
             expect(commentObj).toHaveProperty("comment_id");
