@@ -1,9 +1,14 @@
 const express = require("express");
-const { getAllCategories } = require("./controllers/categoryControllers");
+const {
+  getAllCategories,
+  getAllReviews,
+} = require("./controllers/categoryControllers");
 
 const app = express();
 
 app.get("/api/categories", getAllCategories);
+
+app.get("/api/reviews", getAllReviews);
 
 //GET:/api/categories 204 no content error
 app.use((error, request, response, next) => {
