@@ -18,4 +18,25 @@ const fetchAllReviews = () => {
   });
 };
 
-module.exports = { fetchAllReviews };
+const fetchReviewById = (review_id) => {
+  const selectValues = [review_id];
+
+  return db
+    .query(
+      `
+    SELECT *
+    FROM reviews
+    WHERE reviews.review_id = $1
+  `,
+      selectValues
+    )
+    .then((result) => {
+      const review = result.rows[0];
+      if (!review) {
+        return Promise.reject({ code: 404, msg: "Not found" });
+      } else {
+        return review;
+      }
+    });
+};
+module.exports = { fetchAllReviews, fetchReviewById };
