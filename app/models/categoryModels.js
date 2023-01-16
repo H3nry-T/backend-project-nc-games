@@ -1,13 +1,13 @@
 const db = require("../../db/connection");
 
-const getCategoriesModel = () => {
+const fetchAllCategories = () => {
   return db.query("SELECT slug, description FROM categories").then((result) => {
     if (result.rows) {
       return result.rows;
-    } else {
+    } else if (result.rows.length === 0) {
       return Promise.reject({ code: 204, msg: "there is no content" });
     }
   });
 };
 
-module.exports = { getCategoriesModel };
+module.exports = { fetchAllCategories };

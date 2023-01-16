@@ -1,11 +1,9 @@
 const express = require("express");
-const {
-  getCategoriesController,
-} = require("./controllers/categoryControllers");
+const { getAllCategories } = require("./controllers/categoryControllers");
 
 const app = express();
 
-app.get("/api/categories", getCategoriesController);
+app.get("/api/categories", getAllCategories);
 
 //GET:/api/categories 204 no content error
 app.use((error, request, response, next) => {
@@ -20,7 +18,7 @@ app.use((error, request, response, next) => {
 //GET:/api/categories 500 internal server error
 app.use((error, request, response, next) => {
   if (error) {
-    console.log(error);
+    // console.log(error); //debug console.log
     response.status(500).send({ error: error });
   } else {
     next(error);
