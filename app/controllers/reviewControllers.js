@@ -27,7 +27,10 @@ const getReviewById = (request, response, next) => {
 
 const getCommentsByReviewId = (request, response, next) => {
   const review_id = request.params.review_id;
-  return fetchCommentsByReviewId(review_id)
+  return fetchReviewById(review_id) //checks: does the review even exist?
+    .then(() => {
+      return fetchCommentsByReviewId(review_id); //if review exists: find the comment
+    })
     .then((comments) => {
       response.status(200).send({ comments: comments });
     })
