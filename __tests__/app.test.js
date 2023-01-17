@@ -190,7 +190,7 @@ describe("all tests", () => {
 });
 
 // describe("8-PATCH /api/reviews/:review_id", () => {
-//   it("should accept a valid patch request and respond with 200 satus code", () => {
+//   it("accepts valid patch request and responds with 200 status code", () => {
 //     return request(app)
 //       .patch("/api/reviews/1")
 //       .send({
@@ -227,8 +227,8 @@ describe("all tests", () => {
 //       })
 //       .expect(200)
 //       .then((response) => {
-//         const patchedRow = response.body.patchedRow;
-//         expect(patchedRow).toHaveProperty("votes", 3);
+//         const patchedReview = response.body.patchedReview;
+//         expect(patchedReview).toHaveProperty("votes", 3);
 //       });
 //   });
 // });

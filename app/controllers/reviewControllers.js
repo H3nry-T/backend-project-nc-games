@@ -2,6 +2,7 @@ const {
   fetchAllReviews,
   fetchReviewById,
   fetchCommentsByReviewId,
+  updateReviewById,
 } = require("../models/reviewModels");
 
 const getAllReviews = (request, response, next) => {
@@ -39,4 +40,19 @@ const getCommentsByReviewId = (request, response, next) => {
     });
 };
 
-module.exports = { getAllReviews, getReviewById, getCommentsByReviewId };
+const patchReviewById = (request, response, next) => {
+  const reqBody = request.body;
+
+  console.log(reqBody);
+  const review_id = request.params.review_id;
+  return updateReviewById(reqBody, review_id).then((patchedReview) => {
+    response.status(200).send(patchedReview);
+  });
+};
+
+module.exports = {
+  getAllReviews,
+  getReviewById,
+  getCommentsByReviewId,
+  patchReviewById,
+};

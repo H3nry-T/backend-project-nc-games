@@ -4,6 +4,7 @@ const {
   getAllReviews,
   getReviewById,
   getCommentsByReviewId,
+  patchReviewById,
 } = require("./controllers/reviewControllers");
 const app = express();
 
@@ -15,6 +16,7 @@ app.get("/api/reviews/:review_id", getReviewById);
 
 app.get("/api/reviews/:review_id/comments", getCommentsByReviewId);
 
+app.patch("/api/reviews/:review_id", patchReviewById);
 //GET:/api/"something" 204 no content error
 app.use((error, request, response, next) => {
   if (error.code === 204) {
@@ -51,7 +53,7 @@ app.use((request, response, next) => {
 //GET:/api/"something" 500 internal server error
 app.use((error, request, response, next) => {
   if (error) {
-    // console.log(error); //debug console.log
+    console.log(error); //debug console.log
     response.status(500).send({ error: error });
   }
 });
