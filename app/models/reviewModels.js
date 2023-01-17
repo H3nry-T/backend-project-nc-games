@@ -39,4 +39,28 @@ const fetchReviewById = (review_id) => {
       }
     });
 };
-module.exports = { fetchAllReviews, fetchReviewById };
+
+const fetchCommentsByReviewId = (review_id) => {
+  const selectValues = [review_id];
+  //all review_id coming in are 100% valid no need to check
+  //if review_id exists in db
+
+  return db
+    .query(
+      `
+      SELECT comment_id, comments.votes, comments.created_at, author, body, comments.review_id
+      FROM reviews
+      JOIN comments 
+      ON comments.review_id = reviews.review_id
+      WHERE reviews.review_id = $1
+      ORDER BY comments.created_at DESC;
+  `,
+      selectValues
+    )
+    .then((result) => {
+      const comments = result.rows;
+      return comments;
+    });
+};
+
+module.exports = { fetchAllReviews, fetchReviewById, fetchCommentsByReviewId };
