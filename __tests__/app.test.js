@@ -259,4 +259,71 @@ describe("all tests", () => {
         });
     });
   });
+
+  describe("8-PATCH /api/reviews/:review_id", () => {
+    it("accepts valid patch request and responds with 200 status code", () => {
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({
+          incVotes: 2,
+        })
+        .expect(200);
+    });
+    it("decline an invalid patch request with a incorrectly named key and respond with 400", () => {
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({
+          randomKey: 400,
+        })
+        .expect(400)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({ code: 400, msg: "Bad request" });
+        });
+    });
+    it("decline patch request with too many keys responds 400", () => {
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({
+          randomKey: 400,
+          anotherKey: 600,
+        })
+        .expect(400);
+    });
+    it("decline patch request with no keys responds 400", () => {
+      return request(app).patch("/api/reviews/1").send({}).expect(400);
+    });
+    it("decline patch request for invalid ids", () => {
+      return request(app)
+        .patch("/api/reviews/10000")
+        .send({
+          incVotes: 2,
+        })
+        .expect(404);
+    });
+    it("should accept a valid patch request and respond with 200 satus code", () => {
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({
+          incVotes: 2,
+        })
+        .expect(200)
+        .then((response) => {
+          const patchedReview = response.body.patchedReview;
+          expect(patchedReview).toHaveProperty("votes", 3); //review_id 1 has 1 vote increment by 2 votes to get 3 votes
+        });
+    });
+    it("should be able to decrement votes for valid patch request and respond with 200 satus code", () => {
+      return request(app)
+        .patch("/api/reviews/6") //has 8 votes
+        .send({
+          incVotes: -1,
+        })
+        .expect(200)
+        .then((response) => {
+          const patchedReview = response.body.patchedReview;
+          expect(patchedReview).toHaveProperty("votes", 7); //8 - 1 = 7 votes
+        });
+    });
+  });
 });
