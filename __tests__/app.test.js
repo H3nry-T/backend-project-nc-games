@@ -194,7 +194,7 @@ describe("all tests", () => {
         .post("/api/reviews/1/comments")
         .send({
           username: "mallionaire",
-          body: "this is my favourite game, truly one of the goats",
+          body: "Epic game!",
         })
         .expect(201);
     });
