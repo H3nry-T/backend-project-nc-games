@@ -5,8 +5,11 @@ const {
   getReviewById,
   getCommentsByReviewId,
   patchReviewById,
+  postCommentByReviewId,
 } = require("./controllers/reviewControllers");
 const app = express();
+
+app.use(express.json());
 
 app.get("/api/categories", getAllCategories);
 
@@ -15,6 +18,8 @@ app.get("/api/reviews", getAllReviews);
 app.get("/api/reviews/:review_id", getReviewById);
 
 app.get("/api/reviews/:review_id/comments", getCommentsByReviewId);
+
+app.post("/api/reviews/:review_id/comments", postCommentByReviewId);
 
 app.patch("/api/reviews/:review_id", patchReviewById);
 //GET:/api/"something" 204 no content error
@@ -29,7 +34,11 @@ app.use((error, request, response, next) => {
 
 //GET:/api/something/:something_id 400 bad request error
 app.use((error, request, response, next) => {
-  if (error.code === "22P02") {
+  if (
+    error.code === "22P02" ||
+    error.code === "23503" ||
+    error.code === "23502"
+  ) {
     // console.log(error);
     response.status(400).send({ error: { code: 400, msg: "Bad request" } });
   } else {
