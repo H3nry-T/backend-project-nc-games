@@ -82,15 +82,18 @@ const updateReviewById = (reqBody, review_id) => {
   if (!Object.keys(reqBody).includes("incVotes")) {
     return Promise.reject({ code: 400, msg: "Bad request" });
   }
+
   const updateQuery = `
     UPDATE reviews
-      SET votes += $1
+    SET votes = votes + $1
     WHERE review_id = $2
     RETURNING *
   `;
-  const updateValues = [reqBody.incVotes, review_id];
+  const updateValues = [reqBody.incVotes, Number(review_id)];
 
-  return db.query(updateQuery, updateValues).then((result) => result.rows[0]);
+  return db.query(updateQuery, updateValues).then((result) => {
+    return result.rows[0];
+  });
 };
 module.exports = {
   fetchAllReviews,
