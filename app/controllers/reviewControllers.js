@@ -56,12 +56,14 @@ const postCommentByReviewId = (request, response, next) => {
 
 const patchReviewById = (request, response, next) => {
   const reqBody = request.body;
-
-  console.log(reqBody);
   const review_id = request.params.review_id;
-  return updateReviewById(reqBody, review_id).then((patchedReview) => {
-    response.status(200).send(patchedReview);
-  });
+  return updateReviewById(reqBody, review_id)
+    .then((patchedReview) => {
+      response.status(200).send({ patchedReview });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };
 
 module.exports = {
