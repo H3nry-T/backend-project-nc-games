@@ -125,7 +125,7 @@ describe("all tests", () => {
     it("responds with a status code of 200", () => {
       return request(app).get("/api/reviews/1/comments").expect(200);
     });
-    it("responds with an error code of 404-Not found if the review_id does not exist", () => {
+    it("responds with an error code of 404-Not found if the review_id is a massive number", () => {
       return request(app)
         .get("/api/reviews/100000/comments")
         .expect(404)
@@ -141,7 +141,7 @@ describe("all tests", () => {
           expect(body.error).toEqual({ code: 400, msg: "Bad request" });
         });
     });
-    it("responds with an empty array on valid review with no comments", () => {
+    it("responds with an empty comments array when valid review has no comments", () => {
       return request(app)
         .get("/api/reviews/1/comments")
         .expect(200)
@@ -171,6 +171,19 @@ describe("all tests", () => {
             expect(commentObj).toHaveProperty("body");
             expect(commentObj).toHaveProperty("review_id");
           });
+        });
+    });
+    it(`serves comments in descending order with most recent comments at the top
+      `, () => {
+      return request(app)
+        .get("/api/reviews/2/comments")
+        .expect(200)
+        .then((response) => {
+          const comments = response.body.comments;
+          expect(Array.isArray(comments)).toBe(true);
+          expect(comments[0].comment_id).toBe(5);
+          expect(comments[1].comment_id).toBe(1);
+          expect(comments[comments.length - 1].comment_id).toBe(4);
         });
     });
   });
