@@ -63,4 +63,24 @@ const fetchCommentsByReviewId = (review_id) => {
     });
 };
 
-module.exports = { fetchAllReviews, fetchReviewById, fetchCommentsByReviewId };
+const insertCommentByReviewId = (reqBody, review_id) => {
+  const insertQuery = `
+  INSERT INTO comments 
+    (body, review_id, author, votes)
+  VALUES
+    ($1, $2, $3, $4)
+  RETURNING *;
+  `;
+  const insertValues = [reqBody.body, review_id, reqBody.username, 0];
+  return db.query(insertQuery, insertValues).then((result) => {
+    const postedComment = result.rows[0];
+    return postedComment;
+  });
+};
+
+module.exports = {
+  fetchAllReviews,
+  fetchReviewById,
+  fetchCommentsByReviewId,
+  insertCommentByReviewId,
+};
