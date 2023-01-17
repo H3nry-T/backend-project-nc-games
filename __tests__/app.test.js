@@ -187,4 +187,76 @@ describe("all tests", () => {
         });
     });
   });
+
+  describe("7-POST/api/reviews/:review_id/comments", () => {
+    it("should accept valid username, and body and respond 201 status", () => {
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send({
+          username: "mallionaire",
+          body: "this is my favourite game, truly one of the goats",
+        })
+        .expect(201);
+    });
+    it("should NOT accept unregistered username, respond 400 status", () => {
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send({
+          username: "pacman117",
+          body: "this is my favourite game, truly one of the goats",
+        })
+        .expect(400)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({ code: 400, msg: "Bad request" });
+        });
+    });
+    it("should respond 400 status when the request has missing key", () => {
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send({
+          username: "mallionare",
+        })
+        .expect(400)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({ code: 400, msg: "Bad request" });
+        });
+    });
+    it("should respond 400 status when the request has 2 keys but incorrect key names", () => {
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send({
+          notUsername: "mallionare",
+          notAComment: "notAComment",
+        })
+        .expect(400)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({ code: 400, msg: "Bad request" });
+        });
+    });
+    it("should respond with postedComment", () => {
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send({
+          username: "mallionaire",
+          body: "this is my favourite game, truly one of the goats",
+        })
+        .expect(201)
+        .then((response) => {
+          const postedComment = response.body.postedComment;
+
+          expect(postedComment).toHaveProperty("comment_id");
+          expect(postedComment).toHaveProperty(
+            "body",
+            "this is my favourite game, truly one of the goats"
+          );
+          expect(postedComment).toHaveProperty("review_id", 1);
+          expect(postedComment).toHaveProperty("author", "mallionaire");
+          expect(postedComment).toHaveProperty("votes", 0);
+          expect(postedComment).toHaveProperty("created_at");
+        });
+    });
+  });
 });
