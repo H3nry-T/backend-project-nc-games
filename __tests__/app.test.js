@@ -293,7 +293,14 @@ describe("all tests", () => {
     it("decline patch request with no keys responds 400", () => {
       return request(app).patch("/api/reviews/1").send({}).expect(400);
     });
-
+    it("decline patch request for invalid ids", () => {
+      return request(app)
+        .patch("/api/reviews/10000")
+        .send({
+          incVotes: 2,
+        })
+        .expect(404);
+    });
     it("should accept a valid patch request and respond with 200 satus code", () => {
       return request(app)
         .patch("/api/reviews/1")
