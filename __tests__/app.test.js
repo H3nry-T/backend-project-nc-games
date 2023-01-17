@@ -188,3 +188,47 @@ describe("all tests", () => {
     });
   });
 });
+
+// describe("8-PATCH /api/reviews/:review_id", () => {
+//   it("should accept a valid patch request and respond with 200 satus code", () => {
+//     return request(app)
+//       .patch("/api/reviews/1")
+//       .send({
+//         incVotes: 2,
+//       })
+//       .expect(200);
+//   });
+//   it("decline an invalid patch request with a incorrectly named key and respond with 400", () => {
+//     return request(app)
+//       .patch("/api/reviews/1")
+//       .send({
+//         randomKey: 400,
+//       })
+//       .expect(400);
+//   });
+//   it("decline patch request with too many keys responds 400", () => {
+//     return request(app)
+//       .patch("/api/reviews/1")
+//       .send({
+//         randomKey: 400,
+//         anotherKey: 600,
+//       })
+//       .expect(400);
+//   });
+//   it("decline patch request with no keys responds 400", () => {
+//     return request(app).patch("/api/reviews/1").send({}).expect(400);
+//   });
+
+//   it("should accept a valid patch request and respond with 200 satus code", () => {
+//     return request(app)
+//       .patch("/api/reviews/1")
+//       .send({
+//         incVotes: 2,
+//       })
+//       .expect(200)
+//       .then((response) => {
+//         const patchedRow = response.body.patchedRow;
+//         expect(patchedRow).toHaveProperty("votes", 3);
+//       });
+//   });
+// });
