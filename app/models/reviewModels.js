@@ -42,6 +42,8 @@ const fetchReviewById = (review_id) => {
 
 const fetchCommentsByReviewId = (review_id) => {
   const selectValues = [review_id];
+  //all review_id coming in are 100% valid no need to check
+  //if review_id exists in db
 
   return db
     .query(
@@ -57,13 +59,8 @@ const fetchCommentsByReviewId = (review_id) => {
     )
     .then((result) => {
       const comments = result.rows;
-      if (comments.length < 1) {
-        return Promise.reject({ code: 404, msg: "Not found" });
-      } else if (comments === undefined) {
-        return Promise.reject({ code: 204, msg: "no content" });
-      } else {
-        return comments;
-      }
+      return comments;
     });
 };
+
 module.exports = { fetchAllReviews, fetchReviewById, fetchCommentsByReviewId };
