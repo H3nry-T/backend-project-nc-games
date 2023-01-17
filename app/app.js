@@ -22,7 +22,8 @@ app.get("/api/reviews/:review_id/comments", getCommentsByReviewId);
 app.post("/api/reviews/:review_id/comments", postCommentByReviewId);
 
 app.patch("/api/reviews/:review_id", patchReviewById);
-//GET:/api/"something" 204 no content error
+
+// 204 no content error
 app.use((error, request, response, next) => {
   if (error.code === 204) {
     // console.log(error);
@@ -32,21 +33,7 @@ app.use((error, request, response, next) => {
   }
 });
 
-//GET:/api/something/:something_id 400 bad request error
-app.use((error, request, response, next) => {
-  if (
-    error.code === "22P02" ||
-    error.code === "23503" ||
-    error.code === "23502"
-  ) {
-    // console.log(error);
-    response.status(400).send({ error: { code: 400, msg: "Bad request" } });
-  } else {
-    next(error);
-  }
-});
-
-//GET:/api/something/:something_id 404 Not found error
+//route found MANUAL 404 Not found error
 app.use((error, request, response, next) => {
   if (error.code === 404) {
     // console.log(error);
@@ -56,10 +43,27 @@ app.use((error, request, response, next) => {
   }
 });
 
+//SQL POST/PATCH 400 bad request error
+app.use((error, request, response, next) => {
+  if (
+    (error.code =
+      400 ||
+      error.code === "22P02" ||
+      error.code === "23503" ||
+      error.code === "23502")
+  ) {
+    response.status(400).send({ error: { code: 400, msg: "Bad request" } });
+  } else {
+    next(error);
+  }
+});
+
+//route not found 404 error
 app.use((request, response, next) => {
   response.status(404).send({ code: 404, msg: "not found" });
 });
-//GET:/api/"something" 500 internal server error
+
+//500 internal server error
 app.use((error, request, response, next) => {
   if (error) {
     console.log(error); //debug console.log
