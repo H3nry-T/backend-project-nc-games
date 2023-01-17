@@ -29,7 +29,7 @@ app.use((error, request, response, next) => {
 app.use((error, request, response, next) => {
   if (error.code === "22P02") {
     // console.log(error);
-    response.status(400).send({ error: error });
+    response.status(400).send({ error: { code: 400, msg: "Bad request" } });
   } else {
     next(error);
   }
@@ -45,6 +45,9 @@ app.use((error, request, response, next) => {
   }
 });
 
+app.use((request, response, next) => {
+  response.status(404).send({ code: 404, msg: "not found" });
+});
 //GET:/api/"something" 500 internal server error
 app.use((error, request, response, next) => {
   if (error) {
