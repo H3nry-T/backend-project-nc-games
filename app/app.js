@@ -6,6 +6,7 @@ const {
   getCommentsByReviewId,
   postCommentByReviewId,
 } = require("./controllers/reviewControllers");
+const { getAllUsers } = require("../app/controllers/userControllers");
 const app = express();
 
 app.use(express.json());
@@ -19,6 +20,8 @@ app.get("/api/reviews/:review_id", getReviewById);
 app.get("/api/reviews/:review_id/comments", getCommentsByReviewId);
 
 app.post("/api/reviews/:review_id/comments", postCommentByReviewId);
+
+app.get("/api/users", getAllUsers);
 
 //GET:/api/"something" 204 no content error
 app.use((error, request, response, next) => {
