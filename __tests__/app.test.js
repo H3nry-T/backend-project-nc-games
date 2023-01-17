@@ -149,7 +149,7 @@ describe("all tests", () => {
           expect(body.comments).toEqual([]);
         });
     });
-    it(`responds with 1 review object with these properties:
+    it(`responds with array of comments with these properties:
               comment_id
               votes
               created_at
