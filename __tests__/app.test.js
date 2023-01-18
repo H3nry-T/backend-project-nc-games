@@ -379,20 +379,17 @@ describe("10-GET/api/reviews?queries REFACTORS 4-GET:/api/reviews", () => {
       });
   });
   it("GET/api/reviews accepts query: sort_by=allValidColumns", () => {
-    const columnName = "title";
+    const columnName = "owner";
     return request(app)
       .get("/api/reviews")
       .query({ sort_by: columnName })
       .expect(200)
       .then((response) => {
         const reviews = response.body.reviews;
-        expect(reviews[0]).toHaveProperty(
-          columnName,
-          "A truly Quacking Game; Quacks of Quedlinburg"
-        );
+        expect(reviews[0]).toHaveProperty(columnName, "bainesface");
         expect(reviews[reviews.length - 1]).toHaveProperty(
           columnName,
-          "Ultimate Werewolf"
+          "philippaclaire9"
         );
       });
   });
@@ -455,4 +452,3 @@ describe("10-GET/api/reviews?queries REFACTORS 4-GET:/api/reviews", () => {
       });
   });
 });
-

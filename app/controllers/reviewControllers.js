@@ -9,7 +9,6 @@ const {
 
 const getAllReviews = (request, response, next) => {
   const query = request.query;
-  console.log(request.query);
   return fetchAllReviews(query)
     .then((reviews) => {
       response.status(200).send({ reviews: reviews });
