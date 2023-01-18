@@ -56,7 +56,11 @@ app.use((error, request, response, next) => {
       error.code === "23502")
   ) {
     console.log(error);
-    response.status(400).send({ error: { code: 400, msg: "Bad request" } });
+    if (!error.msg) {
+      response.status(400).send({ error: { code: 400, msg: "Bad request" } });
+    } else {
+      response.status(400).send({ error: error });
+    }
   } else {
     next(error);
   }
