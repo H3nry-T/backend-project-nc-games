@@ -8,14 +8,24 @@ const fetchAllReviews = (query) => {
         ON reviews.review_id = comments.review_id
         `;
   let queryValues = [];
-  const greenQueries = ["title", "category", "designer"];
   if (query.category) {
-    queryValues.push(query.category);
-    selectQuery += `WHERE category = $1 `;
+    if (
+      [
+        "euro game",
+        "social deduction",
+        "dexterity",
+        "children's games",
+      ].includes(query.category)
+    ) {
+      queryValues.push(query.category);
+      selectQuery += `WHERE category = $1 `;
+    } else {
+      return Promise.reject({ code: 400, msg: "invalid category query" });
+    }
   }
   selectQuery += `GROUP BY reviews.review_id `;
   if (query.sort_by) {
-    if (greenQueries.includes(query.sort_by)) {
+    if (["title", "category", "designer"].includes(query.sort_by)) {
       selectQuery += `ORDER BY ${query.sort_by} `;
     } else {
       return Promise.reject({ code: 400, msg: "invalid sort_by query" });
@@ -26,8 +36,10 @@ const fetchAllReviews = (query) => {
   if (query.order) {
     if (["DESC"].includes(query.order)) {
       selectQuery += " DESC";
-    } else {
+    } else if (["ASC"].includes(query.order)) {
       selectQuery += " ASC";
+    } else {
+      return Promise.reject({ code: 400, msg: "invalid order query" });
     }
   }
 
