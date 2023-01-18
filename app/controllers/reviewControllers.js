@@ -3,8 +3,9 @@ const {
   fetchReviewById,
   fetchCommentsByReviewId,
   insertCommentByReviewId,
-
   updateReviewById,
+  removeCommentById,
+  fetchCommentByCommentId,
 } = require("../models/reviewModels");
 
 const getAllReviews = (request, response, next) => {
@@ -71,10 +72,25 @@ const patchReviewById = (request, response, next) => {
     });
 };
 
+const deleteCommentById = (request, response, next) => {
+  const comment_id = request.params.comment_id;
+  return fetchCommentByCommentId(comment_id)
+    .then(() => {
+      return removeCommentById(comment_id);
+    })
+    .then(() => {
+      response.status(204).send();
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
 module.exports = {
   getAllReviews,
   getReviewById,
   getCommentsByReviewId,
   postCommentByReviewId,
   patchReviewById,
+  deleteCommentById,
 };
