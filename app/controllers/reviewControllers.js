@@ -8,7 +8,8 @@ const {
 } = require("../models/reviewModels");
 
 const getAllReviews = (request, response, next) => {
-  return fetchAllReviews()
+  const query = request.query;
+  return fetchAllReviews(query)
     .then((reviews) => {
       response.status(200).send({ reviews: reviews });
     })
