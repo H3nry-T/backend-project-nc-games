@@ -353,105 +353,105 @@ describe("all tests", () => {
         });
     });
   });
+});
 
-  describe("10-GET/api/reviews?queries REFACTORS 4-GET:/api/reviews", () => {
-    it("GET/api/reviews accepts query: category=(category)", () => {
-      return request(app)
-        .get("/api/reviews")
-        .query({ category: "euro game" })
-        .expect(200)
-        .then((response) => {
-          const reviews = response.body.reviews;
-          reviews.forEach((reviewObj) => {
-            expect(reviewObj).toHaveProperty("category", "euro game");
-          });
+describe("10-GET/api/reviews?queries REFACTORS 4-GET:/api/reviews", () => {
+  it("GET/api/reviews accepts query: category=(category)", () => {
+    return request(app)
+      .get("/api/reviews")
+      .query({ category: "euro game" })
+      .expect(200)
+      .then((response) => {
+        const reviews = response.body.reviews;
+        reviews.forEach((reviewObj) => {
+          expect(reviewObj).toHaveProperty("category", "euro game");
         });
-    });
-    it("GET/api/reviews declines query: category=(notAcategory)", () => {
-      return request(app)
-        .get("/api/reviews")
-        .query({ category: "notAcategory" })
-        .expect(400)
-        .then((response) => {
-          const error = response.body.error;
-          expect(error).toEqual({ code: 400, msg: "invalid category query" });
+      });
+  });
+  it("GET/api/reviews declines query: category=(notAcategory)", () => {
+    return request(app)
+      .get("/api/reviews")
+      .query({ category: "notAcategory" })
+      .expect(400)
+      .then((response) => {
+        const error = response.body.error;
+        expect(error).toEqual({ code: 400, msg: "invalid category query" });
+      });
+  });
+  it("GET/api/reviews accepts query: sort_by=allValidColumns", () => {
+    const columnName = "title";
+    return request(app)
+      .get("/api/reviews")
+      .query({ sort_by: columnName })
+      .expect(200)
+      .then((response) => {
+        const reviews = response.body.reviews;
+        expect(reviews[0]).toHaveProperty(
+          columnName,
+          "A truly Quacking Game; Quacks of Quedlinburg"
+        );
+        expect(reviews[reviews.length - 1]).toHaveProperty(
+          columnName,
+          "Ultimate Werewolf"
+        );
+      });
+  });
+  it("GET/api/reviews declines query: sort_by=notAcolumn", () => {
+    return request(app)
+      .get("/api/reviews")
+      .query({ sort_by: "notAcolumn" })
+      .expect(400)
+      .then((response) => {
+        const error = response.body.error;
+        expect(error).toEqual({ code: 400, msg: "Bad request" });
+      });
+  });
+  it("GET/api/reviews accepts query: order=DESC", () => {
+    return request(app)
+      .get("/api/reviews")
+      .query({ order: "DESC" })
+      .expect(200)
+      .then((response) => {
+        const reviews = response.body.reviews;
+        expect(reviews[0]).toHaveProperty(
+          "title",
+          "Mollit elit qui incididunt veniam occaecat cupidatat"
+        );
+        expect(reviews[reviews.length - 1]).toHaveProperty(
+          "title",
+          "Settlers of Catan: Don't Settle For Less"
+        );
+      });
+  });
+  it("GET/api/reviews declines query: order=DESSSC", () => {
+    return request(app)
+      .get("/api/reviews")
+      .query({ order: "DESSSC" })
+      .expect(400)
+      .then((response) => {
+        const error = response.body.error;
+        expect(error).toEqual({ code: 400, msg: "invalid order query" });
+      });
+  });
+  it("GET/api/reviews accepts MULTIPLE queries: category=children's games:sort_by=designer:order=DESC", () => {
+    return request(app)
+      .get("/api/reviews")
+      .query({
+        category: "social deduction",
+        sort_by: "designer",
+        order: "DESC",
+      })
+      .expect(200)
+      .then((response) => {
+        const reviews = response.body.reviews;
+        expect(reviews[0]).toHaveProperty("designer", "Wolfgang Warsch");
+        expect(reviews[reviews.length - 1]).toHaveProperty(
+          "designer",
+          "Akihisa Okui"
+        );
+        reviews.forEach((reviewObj) => {
+          expect(reviewObj).toHaveProperty("category", "social deduction");
         });
-    });
-    it("GET/api/reviews accepts query: sort_by=allValidColumns", () => {
-      const columnName = "title";
-      return request(app)
-        .get("/api/reviews")
-        .query({ sort_by: columnName })
-        .expect(200)
-        .then((response) => {
-          const reviews = response.body.reviews;
-          expect(reviews[0]).toHaveProperty(
-            columnName,
-            "A truly Quacking Game; Quacks of Quedlinburg"
-          );
-          expect(reviews[reviews.length - 1]).toHaveProperty(
-            columnName,
-            "Ultimate Werewolf"
-          );
-        });
-    });
-    it("GET/api/reviews declines query: sort_by=notAcolumn", () => {
-      return request(app)
-        .get("/api/reviews")
-        .query({ sort_by: "notAcolumn" })
-        .expect(400)
-        .then((response) => {
-          const error = response.body.error;
-          expect(error).toEqual({ code: 400, msg: "Bad request" });
-        });
-    });
-    it("GET/api/reviews accepts query: order=DESC", () => {
-      return request(app)
-        .get("/api/reviews")
-        .query({ order: "DESC" })
-        .expect(200)
-        .then((response) => {
-          const reviews = response.body.reviews;
-          expect(reviews[0]).toHaveProperty(
-            "title",
-            "Mollit elit qui incididunt veniam occaecat cupidatat"
-          );
-          expect(reviews[reviews.length - 1]).toHaveProperty(
-            "title",
-            "Settlers of Catan: Don't Settle For Less"
-          );
-        });
-    });
-    it("GET/api/reviews declines query: order=DESSSC", () => {
-      return request(app)
-        .get("/api/reviews")
-        .query({ order: "DESSSC" })
-        .expect(400)
-        .then((response) => {
-          const error = response.body.error;
-          expect(error).toEqual({ code: 400, msg: "invalid order query" });
-        });
-    });
-    it("GET/api/reviews accepts MULTIPLE queries: category=children's games:sort_by=designer:order=DESC", () => {
-      return request(app)
-        .get("/api/reviews")
-        .query({
-          category: "social deduction",
-          sort_by: "designer",
-          order: "DESC",
-        })
-        .expect(200)
-        .then((response) => {
-          const reviews = response.body.reviews;
-          expect(reviews[0]).toHaveProperty("designer", "Wolfgang Warsch");
-          expect(reviews[reviews.length - 1]).toHaveProperty(
-            "designer",
-            "Akihisa Okui"
-          );
-          reviews.forEach((reviewObj) => {
-            expect(reviewObj).toHaveProperty("category", "social deduction");
-          });
-        });
-    });
+      });
   });
 });
