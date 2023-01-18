@@ -6,8 +6,9 @@ const fetchAllReviews = (query) => {
         FROM reviews 
         LEFT JOIN comments 
         ON reviews.review_id = comments.review_id
-        `;
+        `; //DEFAULT
   let queryValues = [];
+
   if (query.category) {
     if (
       [
@@ -23,16 +24,29 @@ const fetchAllReviews = (query) => {
       return Promise.reject({ code: 400, msg: "invalid category query" });
     }
   }
-  selectQuery += `GROUP BY reviews.review_id `;
+
+  selectQuery += `GROUP BY reviews.review_id `; //DEFAULT
+
   if (query.sort_by) {
-    if (["title", "category", "designer"].includes(query.sort_by)) {
+    if (
+      [
+        "title",
+        "category",
+        "review_img_url",
+        "designer",
+        "comment_count",
+      ].includes(query.sort_by)
+    ) {
       selectQuery += `ORDER BY ${query.sort_by} `;
+    } else if (("owner", "review_id", "created_at", "votes")) {
+      selectQuery += `ORDER BY reviews.${query.sort_by}`;
     } else {
       return Promise.reject({ code: 400, msg: "invalid sort_by query" });
     }
   } else {
-    selectQuery += "ORDER BY reviews.created_at";
+    selectQuery += "ORDER BY reviews.created_at"; //DEFAULT
   }
+
   if (query.order) {
     if (["DESC"].includes(query.order)) {
       selectQuery += " DESC";
@@ -43,7 +57,6 @@ const fetchAllReviews = (query) => {
     }
   }
 
-  console.log(selectQuery);
   return db.query(selectQuery, queryValues).then((result) => {
     if (result.rows) {
       return result.rows;

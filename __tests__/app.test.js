@@ -377,19 +377,20 @@ describe("all tests", () => {
           expect(error).toEqual({ code: 400, msg: "invalid category query" });
         });
     });
-    it("GET/api/reviews accepts query: sort_by=[title, category, designer]", () => {
+    it("GET/api/reviews accepts query: sort_by=allValidColumns", () => {
+      const columnName = "title";
       return request(app)
         .get("/api/reviews")
-        .query({ sort_by: "title" })
+        .query({ sort_by: columnName })
         .expect(200)
         .then((response) => {
           const reviews = response.body.reviews;
           expect(reviews[0]).toHaveProperty(
-            "title",
+            columnName,
             "A truly Quacking Game; Quacks of Quedlinburg"
           );
           expect(reviews[reviews.length - 1]).toHaveProperty(
-            "title",
+            columnName,
             "Ultimate Werewolf"
           );
         });
@@ -401,7 +402,7 @@ describe("all tests", () => {
         .expect(400)
         .then((response) => {
           const error = response.body.error;
-          expect(error).toEqual({ code: 400, msg: "invalid sort_by query" });
+          expect(error).toEqual({ code: 400, msg: "Bad request" });
         });
     });
     it("GET/api/reviews accepts query: order=DESC", () => {
@@ -442,7 +443,6 @@ describe("all tests", () => {
         .expect(200)
         .then((response) => {
           const reviews = response.body.reviews;
-          console.log(reviews);
           expect(reviews[0]).toHaveProperty("designer", "Wolfgang Warsch");
           expect(reviews[reviews.length - 1]).toHaveProperty(
             "designer",
