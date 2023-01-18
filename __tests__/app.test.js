@@ -326,4 +326,32 @@ describe("all tests", () => {
         });
     });
   });
+  describe("9-GET/api/users", () => {
+    it("should respond with 200 status code", () => {
+      return request(app).get("/api/users").expect(200);
+    });
+    it("should respond with 404 status code if endpoint is misstyped", () => {
+      return request(app).get("/api/usrs").expect(404);
+    });
+    it(`
+          should return array of object with each object having the following properties:
+          username
+          name
+          avatar_url
+  `, () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((response) => {
+          const users = response.body.users;
+          users.forEach((userObj) => {
+            expect(userObj).toHaveProperty("username");
+            expect(userObj).toHaveProperty("name");
+            expect(userObj).toHaveProperty("avatar_url");
+          });
+        });
+    });
+  });
 });
+
+//kept down here incase of merge conflict
