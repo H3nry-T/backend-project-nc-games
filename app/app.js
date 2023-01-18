@@ -56,10 +56,10 @@ app.use((error, request, response, next) => {
       error.code === "23502")
   ) {
     // console.log(error);
-    if (!error.msg) {
-      response.status(400).send({ error: { code: 400, msg: "Bad request" } });
-    } else {
+    if (error.hasOwnProperty("msg")) {
       response.status(400).send({ error: error });
+    } else {
+      response.status(400).send({ error: { code: 400, msg: "Bad request" } });
     }
   } else {
     next(error);

@@ -400,7 +400,7 @@ describe("10-GET/api/reviews?queries REFACTORS 4-GET:/api/reviews", () => {
       .expect(400)
       .then((response) => {
         const error = response.body.error;
-        expect(error).toEqual({ code: 400, msg: "Bad request" });
+        expect(error).toEqual({ code: 400, msg: "invalid sort_by query" });
       });
   });
   it("GET/api/reviews accepts query: order=DESC", () => {

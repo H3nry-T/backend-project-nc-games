@@ -38,7 +38,9 @@ const fetchAllReviews = (query) => {
       ].includes(query.sort_by)
     ) {
       selectQuery += `ORDER BY ${query.sort_by} `;
-    } else if (("owner", "review_id", "created_at", "votes")) {
+    } else if (
+      ["owner", "review_id", "created_at", "votes"].includes(query.sort_by)
+    ) {
       selectQuery += `ORDER BY reviews.${query.sort_by}`;
     } else {
       return Promise.reject({ code: 400, msg: "invalid sort_by query" });
