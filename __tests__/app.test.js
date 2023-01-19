@@ -353,152 +353,152 @@ describe("all tests", () => {
         });
     });
   });
-});
 
-describe("10-GET/api/reviews?queries REFACTORS 4-GET:/api/reviews", () => {
-  it("GET/api/reviews accepts query: category=(category)", () => {
-    return request(app)
-      .get("/api/reviews")
-      .query({ category: "euro game" })
-      .expect(200)
-      .then((response) => {
-        const reviews = response.body.reviews;
-        reviews.forEach((reviewObj) => {
-          expect(reviewObj).toHaveProperty("category", "euro game");
-        });
-      });
-  });
-  it("GET/api/reviews declines query: category=(notAcategory) 400", () => {
-    return request(app)
-      .get("/api/reviews")
-      .query({ category: "notAcategory" })
-      .expect(400)
-      .then((response) => {
-        const error = response.body.error;
-        expect(error).toEqual({ code: 400, msg: "invalid category query" });
-      });
-  });
-  it("GET/api/reviews accepts query: sort_by=allValidColumns", () => {
-    const columnName = "owner";
-    return request(app)
-      .get("/api/reviews")
-      .query({ sort_by: columnName })
-      .expect(200)
-      .then((response) => {
-        const reviews = response.body.reviews;
-        expect(reviews[0]).toHaveProperty(columnName, "bainesface");
-        expect(reviews[reviews.length - 1]).toHaveProperty(
-          columnName,
-          "philippaclaire9"
-        );
-      });
-  });
-  it("GET/api/reviews declines query: sort_by=notAcolumn 400", () => {
-    return request(app)
-      .get("/api/reviews")
-      .query({ sort_by: "notAcolumn" })
-      .expect(400)
-      .then((response) => {
-        const error = response.body.error;
-        expect(error).toEqual({ code: 400, msg: "invalid sort_by query" });
-      });
-  });
-  it("GET/api/reviews accepts query: order=DESC", () => {
-    return request(app)
-      .get("/api/reviews")
-      .query({ order: "DESC" })
-      .expect(200)
-      .then((response) => {
-        const reviews = response.body.reviews;
-        expect(reviews[0]).toHaveProperty(
-          "title",
-          "Mollit elit qui incididunt veniam occaecat cupidatat"
-        );
-        expect(reviews[reviews.length - 1]).toHaveProperty(
-          "title",
-          "Settlers of Catan: Don't Settle For Less"
-        );
-      });
-  });
-  it("GET/api/reviews declines query: order=DESSSC 400", () => {
-    return request(app)
-      .get("/api/reviews")
-      .query({ order: "DESSSC" })
-      .expect(400)
-      .then((response) => {
-        const error = response.body.error;
-        expect(error).toEqual({ code: 400, msg: "invalid order query" });
-      });
-  });
-  it("GET/api/reviews accepts MULTIPLE queries: category=children's games:sort_by=designer:order=DESC", () => {
-    return request(app)
-      .get("/api/reviews")
-      .query({
-        category: "social deduction",
-        sort_by: "designer",
-        order: "DESC",
-      })
-      .expect(200)
-      .then((response) => {
-        const reviews = response.body.reviews;
-        expect(reviews[0]).toHaveProperty("designer", "Wolfgang Warsch");
-        expect(reviews[reviews.length - 1]).toHaveProperty(
-          "designer",
-          "Akihisa Okui"
-        );
-        reviews.forEach((reviewObj) => {
-          expect(reviewObj).toHaveProperty("category", "social deduction");
-        });
-      });
-  });
-});
-
-describe("11-GET/api/reviews/:review_id (comment count) REFACTORS 5-GET:/api/reviews/:review_id", () => {
-  it(`responds with review object with comment_count added`, () => {
-    return request(app)
-      .get("/api/reviews/1")
-      .expect(200)
-      .then((response) => {
-        const review = response.body.review;
-        expect(typeof review).toBe("object");
-        expect(Array.isArray(review)).toBe(false);
-        expect(review).toHaveProperty("comment_count");
-      });
-  });
-});
-
-describe("12-DELETE/api/comments/:comment_id", () => {
-  it("should delete the comment from the database responds with 204", () => {
-    return request(app)
-      .delete("/api/comments/1")
-      .expect(204)
-      .then(() => {
-        return db.query("SELECT * FROM comments").then((result) => {
-          const comments = result.rows;
-          expect(comments).not.toHaveLength(0);
-          comments.forEach((commentObj) => {
-            expect(commentObj).not.toHaveProperty("comment_id", 1);
+  describe("10-GET/api/reviews?queries REFACTORS 4-GET:/api/reviews", () => {
+    it("GET/api/reviews accepts query: category=(category)", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ category: "euro game" })
+        .expect(200)
+        .then((response) => {
+          const reviews = response.body.reviews;
+          reviews.forEach((reviewObj) => {
+            expect(reviewObj).toHaveProperty("category", "euro game");
           });
         });
-      });
+    });
+    it("GET/api/reviews declines query: category=(notAcategory) 400", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ category: "notAcategory" })
+        .expect(400)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({ code: 400, msg: "invalid category query" });
+        });
+    });
+    it("GET/api/reviews accepts query: sort_by=allValidColumns", () => {
+      const columnName = "owner";
+      return request(app)
+        .get("/api/reviews")
+        .query({ sort_by: columnName })
+        .expect(200)
+        .then((response) => {
+          const reviews = response.body.reviews;
+          expect(reviews[0]).toHaveProperty(columnName, "bainesface");
+          expect(reviews[reviews.length - 1]).toHaveProperty(
+            columnName,
+            "philippaclaire9"
+          );
+        });
+    });
+    it("GET/api/reviews declines query: sort_by=notAcolumn 400", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ sort_by: "notAcolumn" })
+        .expect(400)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({ code: 400, msg: "invalid sort_by query" });
+        });
+    });
+    it("GET/api/reviews accepts query: order=DESC", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ order: "DESC" })
+        .expect(200)
+        .then((response) => {
+          const reviews = response.body.reviews;
+          expect(reviews[0]).toHaveProperty(
+            "title",
+            "Mollit elit qui incididunt veniam occaecat cupidatat"
+          );
+          expect(reviews[reviews.length - 1]).toHaveProperty(
+            "title",
+            "Settlers of Catan: Don't Settle For Less"
+          );
+        });
+    });
+    it("GET/api/reviews declines query: order=DESSSC 400", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ order: "DESSSC" })
+        .expect(400)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({ code: 400, msg: "invalid order query" });
+        });
+    });
+    it("GET/api/reviews accepts MULTIPLE queries: category=children's games:sort_by=designer:order=DESC", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({
+          category: "social deduction",
+          sort_by: "designer",
+          order: "DESC",
+        })
+        .expect(200)
+        .then((response) => {
+          const reviews = response.body.reviews;
+          expect(reviews[0]).toHaveProperty("designer", "Wolfgang Warsch");
+          expect(reviews[reviews.length - 1]).toHaveProperty(
+            "designer",
+            "Akihisa Okui"
+          );
+          reviews.forEach((reviewObj) => {
+            expect(reviewObj).toHaveProperty("category", "social deduction");
+          });
+        });
+    });
   });
-  it("should respond 404 if the comment_id is too high or invalid", () => {
-    return request(app)
-      .delete("/api/comments/100000")
-      .expect(404)
-      .then((response) => {
-        const error = response.body.error;
-        expect(error).toEqual({ code: 404, msg: "Invalid comment_id" });
-      });
+
+  describe("11-GET/api/reviews/:review_id (comment count) REFACTORS 5-GET:/api/reviews/:review_id", () => {
+    it(`responds with review object with comment_count added`, () => {
+      return request(app)
+        .get("/api/reviews/1")
+        .expect(200)
+        .then((response) => {
+          const review = response.body.review;
+          expect(typeof review).toBe("object");
+          expect(Array.isArray(review)).toBe(false);
+          expect(review).toHaveProperty("comment_count");
+        });
+    });
   });
-  it("should respond 400 if notAnid is passed as a parameter", () => {
-    return request(app)
-      .delete("/api/comments/notAnId")
-      .expect(400)
-      .then((response) => {
-        const error = response.body.error;
-        expect(error).toEqual({ code: 400, msg: "Bad request" });
-      });
+
+  describe("12-DELETE/api/comments/:comment_id", () => {
+    it("should delete the comment from the database responds with 204", () => {
+      return request(app)
+        .delete("/api/comments/1")
+        .expect(204)
+        .then(() => {
+          return db.query("SELECT * FROM comments").then((result) => {
+            const comments = result.rows;
+            expect(comments).not.toHaveLength(0);
+            comments.forEach((commentObj) => {
+              expect(commentObj).not.toHaveProperty("comment_id", 1);
+            });
+          });
+        });
+    });
+    it("should respond 404 if the comment_id is too high or invalid", () => {
+      return request(app)
+        .delete("/api/comments/100000")
+        .expect(404)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({ code: 404, msg: "Invalid comment_id" });
+        });
+    });
+    it("should respond 400 if notAnid is passed as a parameter", () => {
+      return request(app)
+        .delete("/api/comments/notAnId")
+        .expect(400)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({ code: 400, msg: "Bad request" });
+        });
+    });
   });
 });
 
