@@ -1,70 +1,67 @@
 const db = require("../../db/connection");
 
 const fetchAllReviews = (query) => {
-  let selectQuery = `
-        SELECT reviews.owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer, COUNT(comment_id) AS comment_count 
-        FROM reviews 
-        LEFT JOIN comments 
-        ON reviews.review_id = comments.review_id
-        `; //DEFAULT
-  let queryValues = [];
+  return db.query("SELECT slug FROM categories").then((result) => {
+    //get all the valid category slugs (needed for error handling category query)
+    let selectQuery = `
+          SELECT reviews.owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer, COUNT(comment_id) AS comment_count 
+          FROM reviews 
+          LEFT JOIN comments 
+          ON reviews.review_id = comments.review_id
+          `; //DEFAULT
+    let queryValues = [];
 
-  if (query.category) {
-    if (
-      [
-        "euro game",
-        "social deduction",
-        "dexterity",
-        "children's games",
-      ].includes(query.category)
-    ) {
-      queryValues.push(query.category);
-      selectQuery += `WHERE category = $1 `;
+    if (query.category) {
+      const categorySlugs = result.rows.map((categoryObj) => categoryObj.slug);
+      if (categorySlugs.includes(query.category)) {
+        queryValues.push(query.category);
+        selectQuery += "WHERE category = $1 ";
+      } else {
+        return Promise.reject({ code: 400, msg: "invalid category query" });
+      }
+    }
+
+    selectQuery += `GROUP BY reviews.review_id `; //DEFAULT
+
+    if (query.sort_by) {
+      if (
+        [
+          "title",
+          "category",
+          "review_img_url",
+          "designer",
+          "comment_count",
+        ].includes(query.sort_by)
+      ) {
+        selectQuery += `ORDER BY ${query.sort_by} `;
+      } else if (
+        ["owner", "review_id", "created_at", "votes"].includes(query.sort_by)
+      ) {
+        selectQuery += `ORDER BY reviews.${query.sort_by}`;
+      } else {
+        return Promise.reject({ code: 400, msg: "invalid sort_by query" });
+      }
     } else {
-      return Promise.reject({ code: 400, msg: "invalid category query" });
+      selectQuery += "ORDER BY reviews.created_at"; //DEFAULT
     }
-  }
 
-  selectQuery += `GROUP BY reviews.review_id `; //DEFAULT
-
-  if (query.sort_by) {
-    if (
-      [
-        "title",
-        "category",
-        "review_img_url",
-        "designer",
-        "comment_count",
-      ].includes(query.sort_by)
-    ) {
-      selectQuery += `ORDER BY ${query.sort_by} `;
-    } else if (
-      ["owner", "review_id", "created_at", "votes"].includes(query.sort_by)
-    ) {
-      selectQuery += `ORDER BY reviews.${query.sort_by}`;
-    } else {
-      return Promise.reject({ code: 400, msg: "invalid sort_by query" });
+    if (query.order) {
+      if (["DESC"].includes(query.order)) {
+        selectQuery += " DESC";
+      } else if (["ASC"].includes(query.order)) {
+        selectQuery += " ASC";
+      } else {
+        return Promise.reject({ code: 400, msg: "invalid order query" });
+      }
     }
-  } else {
-    selectQuery += "ORDER BY reviews.created_at"; //DEFAULT
-  }
 
-  if (query.order) {
-    if (["DESC"].includes(query.order)) {
-      selectQuery += " DESC";
-    } else if (["ASC"].includes(query.order)) {
-      selectQuery += " ASC";
-    } else {
-      return Promise.reject({ code: 400, msg: "invalid order query" });
-    }
-  }
-
-  return db.query(selectQuery, queryValues).then((result) => {
-    if (result.rows) {
-      return result.rows;
-    } else if (result.rows.length === 0) {
-      return Promise.reject({ code: 204, msg: "there is no content" });
-    }
+    return db.query(selectQuery, queryValues).then((result) => {
+      if (result.rows) {
+        return result.rows;
+      } else if (result.rows.length === 0) {
+        return Promise.reject({ code: 204, msg: "there is no content" });
+      }
+    });
   });
 };
 

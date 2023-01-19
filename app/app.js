@@ -36,7 +36,7 @@ app.use((error, request, response, next) => {
       error.code === "23503" ||
       error.code === "23502")
   ) {
-    console.log(error);
+    // console.log(error);
     if (error.hasOwnProperty("msg")) {
       //SQL custom errors
       response.status(400).send({ error: error });
