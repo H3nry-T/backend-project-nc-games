@@ -148,10 +148,34 @@ const updateReviewById = (reqBody, review_id) => {
     return result.rows[0];
   });
 };
+
+const removeCommentById = (comment_id) => {
+  const deleteQuery = `
+    DELETE FROM comments 
+    WHERE comment_id = $1
+  `;
+
+  return db.query(deleteQuery, [comment_id]);
+};
+
+const fetchCommentByCommentId = (comment_id) => {
+  const selectQuery = `
+    SELECT * FROM comments
+    WHERE comment_id = $1
+  `;
+  return db.query(selectQuery, [comment_id]).then((result) => {
+    if (result.rows.length === 0) {
+      return Promise.reject({ code: 404, msg: "Invalid comment_id" });
+    }
+    return result.rows;
+  });
+};
 module.exports = {
   fetchAllReviews,
   fetchReviewById,
   fetchCommentsByReviewId,
   insertCommentByReviewId,
   updateReviewById,
+  removeCommentById,
+  fetchCommentByCommentId,
 };

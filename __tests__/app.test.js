@@ -368,7 +368,7 @@ describe("10-GET/api/reviews?queries REFACTORS 4-GET:/api/reviews", () => {
         });
       });
   });
-  it("GET/api/reviews declines query: category=(notAcategory)", () => {
+  it("GET/api/reviews declines query: category=(notAcategory) 400", () => {
     return request(app)
       .get("/api/reviews")
       .query({ category: "notAcategory" })
@@ -393,7 +393,7 @@ describe("10-GET/api/reviews?queries REFACTORS 4-GET:/api/reviews", () => {
         );
       });
   });
-  it("GET/api/reviews declines query: sort_by=notAcolumn", () => {
+  it("GET/api/reviews declines query: sort_by=notAcolumn 400", () => {
     return request(app)
       .get("/api/reviews")
       .query({ sort_by: "notAcolumn" })
@@ -420,7 +420,7 @@ describe("10-GET/api/reviews?queries REFACTORS 4-GET:/api/reviews", () => {
         );
       });
   });
-  it("GET/api/reviews declines query: order=DESSSC", () => {
+  it("GET/api/reviews declines query: order=DESSSC 400", () => {
     return request(app)
       .get("/api/reviews")
       .query({ order: "DESSSC" })
@@ -463,6 +463,41 @@ describe("11-GET/api/reviews/:review_id (comment count) REFACTORS 5-GET:/api/rev
         expect(typeof review).toBe("object");
         expect(Array.isArray(review)).toBe(false);
         expect(review).toHaveProperty("comment_count");
+      });
+  });
+});
+
+describe("12-DELETE/api/comments/:comment_id", () => {
+  it("should delete the comment from the database responds with 204", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(() => {
+        return db.query("SELECT * FROM comments").then((result) => {
+          const comments = result.rows;
+          expect(comments).not.toHaveLength(0);
+          comments.forEach((commentObj) => {
+            expect(commentObj).not.toHaveProperty("comment_id", 1);
+          });
+        });
+      });
+  });
+  it("should respond 404 if the comment_id is too high or invalid", () => {
+    return request(app)
+      .delete("/api/comments/100000")
+      .expect(404)
+      .then((response) => {
+        const error = response.body.error;
+        expect(error).toEqual({ code: 404, msg: "Invalid comment_id" });
+      });
+  });
+  it("should respond 400 if notAnid is passed as a parameter", () => {
+    return request(app)
+      .delete("/api/comments/notAnId")
+      .expect(400)
+      .then((response) => {
+        const error = response.body.error;
+        expect(error).toEqual({ code: 400, msg: "Bad request" });
       });
   });
 });
