@@ -1,5 +1,7 @@
 const express = require("express");
 const { getAllCategories } = require("./controllers/categoryControllers");
+const { getAllEndpoints } = require("./controllers/apiControllers");
+const { getAllUsers } = require("../app/controllers/userControllers");
 const {
   getAllReviews,
   getReviewById,
@@ -8,10 +10,11 @@ const {
   postCommentByReviewId,
   deleteCommentById,
 } = require("./controllers/reviewControllers");
-const { getAllUsers } = require("../app/controllers/userControllers");
 const app = express();
 
 app.use(express.json());
+
+app.get("/api", getAllEndpoints);
 
 app.get("/api/categories", getAllCategories);
 
@@ -42,7 +45,7 @@ app.use((error, request, response, next) => {
 //route found MANUAL 404 Not found error
 app.use((error, request, response, next) => {
   if (error.code === 404) {
-    console.log(error);
+    // console.log(error);
     response.status(404).send({ error: error });
   } else {
     next(error);
@@ -58,10 +61,28 @@ app.use((error, request, response, next) => {
       error.code === "23503" ||
       error.code === "23502")
   ) {
-    console.log(error);
+    // console.log(error);
     if (error.hasOwnProperty("msg")) {
+      //SQL custom errors
       response.status(400).send({ error: error });
+    } else if (error.routine === "ExecConstraints") {
+      //SQL cannot insert null values
+      response.status(400).send({
+        error: {
+          code: 400,
+          msg: "Bad request must have username, body keys",
+        },
+      });
+    } else if (error.routine === "ri_ReportViolation") {
+      //SQL violates foreign key
+      response.status(400).send({
+        error: {
+          code: 400,
+          msg: "Bad request the username is not registered with us",
+        },
+      });
     } else {
+      //SQL any other error
       response.status(400).send({ error: { code: 400, msg: "Bad request" } });
     }
   } else {
@@ -77,7 +98,7 @@ app.use((request, response, next) => {
 //500 internal server error
 app.use((error, request, response, next) => {
   if (error) {
-    console.log(error); //debug console.log
+    // console.log(error);
     response.status(500).send({ error: error });
   }
 });
