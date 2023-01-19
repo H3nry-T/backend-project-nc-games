@@ -1,3 +1,12 @@
+const { fetchAllEndpoints } = require("../models/apiModels");
+
 exports.getAllEndpoints = (request, response, next) => {
-  response.status(200).send({ allEndpoints: [{ endoint1: "hello there" }] });
+  return fetchAllEndpoints()
+    .then((allEndpoints) => {
+      //   console.log(allEndpoints);
+      response.status(200).send({ allEndpoints });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };

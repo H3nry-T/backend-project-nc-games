@@ -455,12 +455,28 @@ describe("10-GET/api/reviews?queries REFACTORS 4-GET:/api/reviews", () => {
 
 describe("13-GET: /api", () => {
   it("should return a json object with all the endpoints listed", () => {
-    return request(app).get("/api").expect(200);
-    // .then((response) => {
-    //   const allEndpoints = response.body.allEndpoints;
-    //   allEndpoints.forEach((endpoint) => {
-    //     expect(endpoint).toHaveProperty("description");
-    //   });
-    // });
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        const allEndpoints = response.body.allEndpoints;
+        console.log(allEndpoints);
+        expect(allEndpoints).toHaveProperty("GET /api");
+        expect(allEndpoints).toHaveProperty("GET /api/categories");
+        expect(allEndpoints).toHaveProperty("GET /api/reviews");
+        expect(allEndpoints).toHaveProperty("GET /api/reviews/:review_id");
+        expect(allEndpoints).toHaveProperty(
+          "GET /api/reviews/:review_id/comments"
+        );
+        expect(allEndpoints).toHaveProperty(
+          "POST /api/reviews/:review_id/comments"
+        );
+        expect(allEndpoints).toHaveProperty("PATCH /api/reviews/:review_id");
+        expect(allEndpoints).toHaveProperty("GET /api/users");
+        expect(allEndpoints).toHaveProperty("DELETE /api/comments/comment_id");
+        for (const key in allEndpoints) {
+          expect(allEndpoints[key]).toHaveProperty("description");
+        }
+      });
   });
 });
