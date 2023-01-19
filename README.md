@@ -71,18 +71,6 @@ Here is what you should have in the package.json file in the root:
 
 <code>npm run test</code>
 
-<pre>
-    "scripts": {
-    "start": "node listen.js",
-    "seed-prod": "NODE_ENV=production npm run seed",
-    "setup-dbs": "psql -f ./db/setup.sql",
-    "seed": "node ./db/seeds/run-seed.js",
-    "test": "jest",
-    "prepare": "husky install",
-    "listen": "node ./app/listen.js"
-    },
-</pre>
-
 ### Minimum versions:
 
 <bold>Node.js: v18.12.1</bold><br>
