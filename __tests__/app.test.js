@@ -453,6 +453,20 @@ describe("10-GET/api/reviews?queries REFACTORS 4-GET:/api/reviews", () => {
   });
 });
 
+describe("11-GET/api/reviews/:review_id (comment count) REFACTORS 5-GET:/api/reviews/:review_id", () => {
+  it(`responds with review object with comment_count added`, () => {
+    return request(app)
+      .get("/api/reviews/1")
+      .expect(200)
+      .then((response) => {
+        const review = response.body.review;
+        expect(typeof review).toBe("object");
+        expect(Array.isArray(review)).toBe(false);
+        expect(review).toHaveProperty("comment_count");
+      });
+  });
+});
+
 describe("12-DELETE/api/comments/:comment_id", () => {
   it("should delete the comment from the database responds with 204", () => {
     return request(app)

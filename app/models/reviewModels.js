@@ -74,9 +74,12 @@ const fetchReviewById = (review_id) => {
   return db
     .query(
       `
-    SELECT *
-    FROM reviews
-    WHERE reviews.review_id = $1
+      SELECT reviews.owner, title, reviews.review_id, category, review_body, review_img_url, reviews.created_at, reviews.votes, designer, COUNT(comment_id) AS comment_count 
+      FROM reviews 
+      LEFT JOIN comments 
+      ON reviews.review_id = comments.review_id
+      WHERE reviews.review_id = $1
+      GROUP BY reviews.review_id
   `,
       selectValues
     )
