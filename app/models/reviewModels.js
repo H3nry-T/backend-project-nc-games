@@ -133,7 +133,7 @@ const insertCommentByReviewId = (reqBody, review_id) => {
 
 const updateReviewById = (reqBody, review_id) => {
   if (!Object.keys(reqBody).includes("incVotes")) {
-    return Promise.reject({ code: 400, msg: "Bad request" });
+    return Promise.reject({ code: 400, msg: "missing an incVotes key" });
   }
 
   const updateQuery = `
