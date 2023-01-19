@@ -30,5 +30,26 @@
         }
       ]
     }
+  },
+  "GET /api/reviews/:review_id": {
+    "description": "serves a json review",
+    "exampleResponse": { "review": {} }
+  },
+  "GET /api/reviews/:review_id/comments": {
+    "description": "serves a json review",
+    "exampleResponse": { "review": {} }
+  },
+  "POST /api/reviews/:review_id/comments": {
+    "description": "serves a json review",
+    "exampleResponse": { "review": {} }
+  },
+  "PATCH /api/reviews/:review_id": {
+    "description": "serves a json review"
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users"
+  },
+  "DELETE /api/comments/comment_id": {
+    "description": "serves a 204 no content status"
   }
 }

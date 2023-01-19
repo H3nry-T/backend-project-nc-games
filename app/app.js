@@ -1,5 +1,7 @@
 const express = require("express");
 const { getAllCategories } = require("./controllers/categoryControllers");
+const { getAllEndpoints } = require("./controllers/apiControllers");
+const { getAllUsers } = require("../app/controllers/userControllers");
 const {
   getAllReviews,
   getReviewById,
@@ -8,10 +10,11 @@ const {
   postCommentByReviewId,
   deleteCommentById,
 } = require("./controllers/reviewControllers");
-const { getAllUsers } = require("../app/controllers/userControllers");
 const app = express();
 
 app.use(express.json());
+
+app.get("/api", getAllEndpoints);
 
 app.get("/api/categories", getAllCategories);
 
