@@ -1,36 +1,11 @@
 const express = require("express");
-const { getAllCategories } = require("./controllers/categoryControllers");
-const { getAllEndpoints } = require("./controllers/apiControllers");
-const { getAllUsers } = require("../app/controllers/userControllers");
-const {
-  getAllReviews,
-  getReviewById,
-  getCommentsByReviewId,
-  patchReviewById,
-  postCommentByReviewId,
-  deleteCommentById,
-} = require("./controllers/reviewControllers");
+const apiRouter = require("./routes/apiRouter");
+
 const app = express();
 
 app.use(express.json());
 
-app.get("/api", getAllEndpoints);
-
-app.get("/api/categories", getAllCategories);
-
-app.get("/api/reviews", getAllReviews);
-
-app.get("/api/reviews/:review_id", getReviewById);
-
-app.get("/api/reviews/:review_id/comments", getCommentsByReviewId);
-
-app.post("/api/reviews/:review_id/comments", postCommentByReviewId);
-
-app.patch("/api/reviews/:review_id", patchReviewById);
-
-app.get("/api/users", getAllUsers);
-
-app.delete("/api/comments/:comment_id", deleteCommentById);
+app.use("/api", apiRouter);
 
 // 204 no content error
 app.use((error, request, response, next) => {
