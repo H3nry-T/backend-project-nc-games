@@ -64,7 +64,7 @@
     }
   },
   "POST /api/reviews/:review_id/comments": {
-    "description": "serves a json review",
+    "description": "serves a json of posted comment",
     "requestBody": {
       "usermame": "grumpy19",
       "body": "hello there! this is my review!!!"
@@ -81,7 +81,7 @@
     }
   },
   "PATCH /api/reviews/:review_id": {
-    "description": "serves a json review",
+    "description": "serves a json patched review",
     "requestBody": {
       "incVotes": 1000
     },
