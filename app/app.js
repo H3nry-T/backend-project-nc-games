@@ -45,7 +45,7 @@ app.use((error, request, response, next) => {
 //route found MANUAL 404 Not found error
 app.use((error, request, response, next) => {
   if (error.code === 404) {
-    console.log(error);
+    // console.log(error);
     response.status(404).send({ error: error });
   } else {
     next(error);
@@ -61,7 +61,7 @@ app.use((error, request, response, next) => {
       error.code === "23503" ||
       error.code === "23502")
   ) {
-    console.log(error);
+    // console.log(error);
     if (error.hasOwnProperty("msg")) {
       response.status(400).send({ error: error });
     } else {
@@ -80,7 +80,7 @@ app.use((request, response, next) => {
 //500 internal server error
 app.use((error, request, response, next) => {
   if (error) {
-    console.log(error); //debug console.log
+    // console.log(error);
     response.status(500).send({ error: error });
   }
 });

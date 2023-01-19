@@ -13,7 +13,7 @@ afterAll(() => {
   db.end();
 });
 
-describe("all tests", () => {
+describe("RUN ALL TESTS", () => {
   describe("3-GET:/api/categories", () => {
     it("responds with a status code of 200", () => {
       return request(app).get("/api/categories").expect(200);
