@@ -1,5 +1,7 @@
 const express = require("express");
 const { getAllCategories } = require("./controllers/categoryControllers");
+const { getAllEndpoints } = require("./controllers/apiControllers");
+const { getAllUsers } = require("../app/controllers/userControllers");
 const {
   getAllReviews,
   getReviewById,
@@ -7,10 +9,11 @@ const {
   patchReviewById,
   postCommentByReviewId,
 } = require("./controllers/reviewControllers");
-const { getAllUsers } = require("../app/controllers/userControllers");
 const app = express();
 
 app.use(express.json());
+
+app.get("/api", getAllEndpoints);
 
 app.get("/api/categories", getAllCategories);
 
@@ -55,7 +58,7 @@ app.use((error, request, response, next) => {
       error.code === "23503" ||
       error.code === "23502")
   ) {
-    // console.log(error);
+    console.log(error);
     if (error.hasOwnProperty("msg")) {
       response.status(400).send({ error: error });
     } else {

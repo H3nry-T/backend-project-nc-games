@@ -452,3 +452,15 @@ describe("10-GET/api/reviews?queries REFACTORS 4-GET:/api/reviews", () => {
       });
   });
 });
+
+describe("13-GET: /api", () => {
+  it("should return a json object with all the endpoints listed", () => {
+    return request(app).get("/api").expect(200);
+    // .then((response) => {
+    //   const allEndpoints = response.body.allEndpoints;
+    //   allEndpoints.forEach((endpoint) => {
+    //     expect(endpoint).toHaveProperty("description");
+    //   });
+    // });
+  });
+});
