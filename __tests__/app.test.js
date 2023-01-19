@@ -208,7 +208,10 @@ describe("RUN ALL TESTS", () => {
         .expect(400)
         .then((response) => {
           const error = response.body.error;
-          expect(error).toEqual({ code: 400, msg: "Bad request" });
+          expect(error).toEqual({
+            code: 400,
+            msg: "Bad request the username is not registered with us",
+          });
         });
     });
     it("should respond 400 status when the request has missing key", () => {
@@ -220,7 +223,10 @@ describe("RUN ALL TESTS", () => {
         .expect(400)
         .then((response) => {
           const error = response.body.error;
-          expect(error).toEqual({ code: 400, msg: "Bad request" });
+          expect(error).toEqual({
+            code: 400,
+            msg: "Bad request must have username, body keys",
+          });
         });
     });
     it("should respond 400 status when the request has 2 keys but incorrect key names", () => {
@@ -233,7 +239,10 @@ describe("RUN ALL TESTS", () => {
         .expect(400)
         .then((response) => {
           const error = response.body.error;
-          expect(error).toEqual({ code: 400, msg: "Bad request" });
+          expect(error).toEqual({
+            code: 400,
+            msg: "Bad request must have username, body keys",
+          });
         });
     });
     it("should respond with postedComment", () => {
@@ -278,20 +287,31 @@ describe("RUN ALL TESTS", () => {
         .expect(400)
         .then((response) => {
           const error = response.body.error;
-          expect(error).toEqual({ code: 400, msg: "Bad request" });
+          expect(error).toEqual({ code: 400, msg: "missing an incVotes key" });
         });
     });
     it("decline patch request with too many keys responds 400", () => {
       return request(app)
-        .patch("/api/reviews/1")
+        .patch("/api/reviews/9")
         .send({
           randomKey: 400,
           anotherKey: 600,
         })
-        .expect(400);
+        .expect(400)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({ code: 400, msg: "missing an incVotes key" });
+        });
     });
     it("decline patch request with no keys responds 400", () => {
-      return request(app).patch("/api/reviews/1").send({}).expect(400);
+      return request(app)
+        .patch("/api/reviews/8")
+        .send({})
+        .expect(400)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({ code: 400, msg: "missing an incVotes key" });
+        });
     });
     it("decline patch request for invalid ids", () => {
       return request(app)
@@ -299,7 +319,11 @@ describe("RUN ALL TESTS", () => {
         .send({
           incVotes: 2,
         })
-        .expect(404);
+        .expect(404)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({ code: 404, msg: "Not found" });
+        });
     });
     it("should accept a valid patch request and respond with 200 satus code", () => {
       return request(app)
@@ -500,32 +524,33 @@ describe("RUN ALL TESTS", () => {
         });
     });
   });
-});
 
-describe("13-GET: /api", () => {
-  it("should return a json object with all the endpoints listed", () => {
-    return request(app)
-      .get("/api")
-      .expect(200)
-      .then((response) => {
-        const allEndpoints = response.body.allEndpoints;
-        console.log(allEndpoints);
-        expect(allEndpoints).toHaveProperty("GET /api");
-        expect(allEndpoints).toHaveProperty("GET /api/categories");
-        expect(allEndpoints).toHaveProperty("GET /api/reviews");
-        expect(allEndpoints).toHaveProperty("GET /api/reviews/:review_id");
-        expect(allEndpoints).toHaveProperty(
-          "GET /api/reviews/:review_id/comments"
-        );
-        expect(allEndpoints).toHaveProperty(
-          "POST /api/reviews/:review_id/comments"
-        );
-        expect(allEndpoints).toHaveProperty("PATCH /api/reviews/:review_id");
-        expect(allEndpoints).toHaveProperty("GET /api/users");
-        expect(allEndpoints).toHaveProperty("DELETE /api/comments/comment_id");
-        for (const key in allEndpoints) {
-          expect(allEndpoints[key]).toHaveProperty("description");
-        }
-      });
+  describe("13-GET: /api", () => {
+    it("should return a json object with all the endpoints listed", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then((response) => {
+          const allEndpoints = response.body.allEndpoints;
+          expect(allEndpoints).toHaveProperty("GET /api");
+          expect(allEndpoints).toHaveProperty("GET /api/categories");
+          expect(allEndpoints).toHaveProperty("GET /api/reviews");
+          expect(allEndpoints).toHaveProperty("GET /api/reviews/:review_id");
+          expect(allEndpoints).toHaveProperty(
+            "GET /api/reviews/:review_id/comments"
+          );
+          expect(allEndpoints).toHaveProperty(
+            "POST /api/reviews/:review_id/comments"
+          );
+          expect(allEndpoints).toHaveProperty("PATCH /api/reviews/:review_id");
+          expect(allEndpoints).toHaveProperty("GET /api/users");
+          expect(allEndpoints).toHaveProperty(
+            "DELETE /api/comments/comment_id"
+          );
+          for (const key in allEndpoints) {
+            expect(allEndpoints[key]).toHaveProperty("description");
+          }
+        });
+    });
   });
 });
