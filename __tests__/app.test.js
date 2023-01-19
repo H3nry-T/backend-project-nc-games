@@ -476,7 +476,7 @@ describe("12-DELETE/api/comments/:comment_id", () => {
         expect(error).toEqual({ code: 404, msg: "Invalid comment_id" });
       });
   });
-  it("should respond 400 if notComment_id is passed as a parameter", () => {
+  it("should respond 400 if notAnid is passed as a parameter", () => {
     return request(app)
       .delete("/api/comments/notAnId")
       .expect(400)
