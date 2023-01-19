@@ -456,13 +456,14 @@ describe("10-GET/api/reviews?queries REFACTORS 4-GET:/api/reviews", () => {
 describe("12-DELETE/api/comments/:comment_id", () => {
   it("should delete the comment from the database responds with 204", () => {
     return request(app)
-      .delete("/api/comments/2")
+      .delete("/api/comments/1")
       .expect(204)
       .then(() => {
         return db.query("SELECT * FROM comments").then((result) => {
           const comments = result.rows;
+          expect(comments).not.toHaveLength(0);
           comments.forEach((commentObj) => {
-            expect(commentObj).not.toHaveProperty("comment_id", 2);
+            expect(commentObj).not.toHaveProperty("comment_id", 1);
           });
         });
       });
