@@ -30,5 +30,93 @@
         }
       ]
     }
+  },
+  "GET /api/reviews/:review_id": {
+    "description": "serves a json review",
+    "exampleResponse": {
+      "review": {
+        "owner": "happyamy2016",
+        "title": "Karma Karma Chameleon",
+        "review_id": 3,
+        "category": "hidden-roles",
+        "review_body": "Try to trick your friends. If you find yourself being dealt the Chamelean card then the aim of the game is simple; blend in... Meanwhile the other players aim to be as vague as they can to not give the game away ",
+        "review_img_url": "https://images.pexels.com/photos/45868/chameleon-reptile-lizard-green-45868.jpeg?w=700&h=700",
+        "created_at": "2021-01-18T10:01:42.151Z",
+        "votes": 5,
+        "designer": "Rikki Tahta",
+        "comment_count": "5"
+      }
+    }
+  },
+  "GET /api/reviews/:review_id/comments": {
+    "description": "serves an array of all comments associated on the review",
+    "exampleResponse": {
+      "review": [
+        {
+          "comment_id": 10,
+          "votes": 9,
+          "created_at": "2021-03-27T14:15:31.110Z",
+          "author": "grumpy19",
+          "body": "Ex id ipsum dolore non cillum anim sint duis nisi anim deserunt nisi minim.",
+          "review_id": 2
+        }
+      ]
+    }
+  },
+  "POST /api/reviews/:review_id/comments": {
+    "description": "serves a json of posted comment",
+    "requestBody": {
+      "usermame": "grumpy19",
+      "body": "hello there! this is my review!!!"
+    },
+    "exampleResponse": {
+      "postedComment": {
+        "comment_id": 68,
+        "body": "hello there! this is my review!!!",
+        "review_id": 1,
+        "author": "grumpy19",
+        "votes": 0,
+        "created_at": "2023-01-19T12:13:29.416Z"
+      }
+    }
+  },
+  "PATCH /api/reviews/:review_id": {
+    "description": "serves a json patched review",
+    "requestBody": {
+      "incVotes": 1000
+    },
+    "exampleResponse": {
+      "patchedReview": {
+        "review_id": 8,
+        "title": "Scythe; you're gonna need a bigger table!",
+        "category": "engine-building",
+        "designer": "Jamey Stegmaier",
+        "owner": "grumpy19",
+        "review_body": "Spend 30 minutes just setting up all of the boards (!) meeple and decks, just to forget how to play. Scythe can be a lengthy game but really packs a punch if you put the time in. With beautiful artwork, countless scenarios and clever game mechanics, this board game is a must for any board game fanatic; just make sure you explain ALL the rules before you start playing with first timers or you may find they bring it up again and again.",
+        "review_img_url": "https://images.pexels.com/photos/4200740/pexels-photo-4200740.jpeg?w=700&h=700",
+        "created_at": "2021-01-22T10:37:04.839Z",
+        "votes": 1100
+      }
+    }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "tickle122",
+          "name": "Tom Tickle",
+          "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+        },
+        {
+          "username": "grumpy19",
+          "name": "Paul Grump",
+          "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/7/78/Mr-Grumpy-3A.PNG/revision/latest?cb=20170707233013"
+        }
+      ]
+    }
+  },
+  "DELETE /api/comments/comment_id": {
+    "description": "serves a 204 no content status"
   }
 }
