@@ -12,7 +12,6 @@ exports.getAllUsers = (request, response, next) => {
 
 exports.getUserByUsername = (request, response, next) => {
   const username = request.params.username;
-  console.log(username);
   return fetchUserByUsername(username)
     .then((user) => {
       response.status(200).send({ user });

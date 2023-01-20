@@ -245,6 +245,9 @@ describe("RUN ALL TESTS", () => {
           });
         });
     });
+    it("should respond 404 when review_id is non existant", () => {
+      //PLEASE ADD THIS TEST VERY IMPORTANT
+    });
     it("should respond with postedComment", () => {
       return request(app)
         .post("/api/reviews/1/comments")
