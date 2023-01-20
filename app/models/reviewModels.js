@@ -10,7 +10,6 @@ const fetchAllReviews = (query) => {
           ON reviews.review_id = comments.review_id
           `; //DEFAULT
     let queryValues = [];
-
     if (query.category) {
       const categorySlugs = result.rows.map((categoryObj) => categoryObj.slug);
       if (categorySlugs.includes(query.category)) {
@@ -20,9 +19,7 @@ const fetchAllReviews = (query) => {
         return Promise.reject({ code: 400, msg: "invalid category query" });
       }
     }
-
     selectQuery += `GROUP BY reviews.review_id `; //DEFAULT
-
     if (query.sort_by) {
       if (
         [
@@ -44,24 +41,25 @@ const fetchAllReviews = (query) => {
     } else {
       selectQuery += "ORDER BY reviews.created_at"; //DEFAULT
     }
-
     if (query.order) {
-      if (["DESC"].includes(query.order)) {
+      if (query.order === "DESC") {
         selectQuery += " DESC";
-      } else if (["ASC"].includes(query.order)) {
+      } else if (query.order === "ASC") {
         selectQuery += " ASC";
       } else {
         return Promise.reject({ code: 400, msg: "invalid order query" });
       }
     } //ASC is default if there is no query.order
 
-    return db.query(selectQuery, queryValues).then((result) => result.rows);
+    return db.query(selectQuery, queryValues).then((result) => {
+      const allReviews = result.rows;
+      return allReviews;
+    });
   });
 };
 
 const fetchReviewById = (review_id) => {
   const selectValues = [review_id];
-
   return db
     .query(
       `
@@ -136,7 +134,8 @@ const updateReviewById = (reqBody, review_id) => {
   const updateValues = [reqBody.incVotes, Number(review_id)];
 
   return db.query(updateQuery, updateValues).then((result) => {
-    return result.rows[0];
+    const updatedReview = result.rows[0];
+    return updatedReview;
   });
 };
 
@@ -155,10 +154,11 @@ const fetchCommentByCommentId = (comment_id) => {
     WHERE comment_id = $1
   `;
   return db.query(selectQuery, [comment_id]).then((result) => {
-    if (result.rows.length === 0) {
+    const comment = result.rows[0];
+    if (!comment) {
       return Promise.reject({ code: 404, msg: "Invalid comment_id" });
     }
-    return result.rows;
+    return comment;
   });
 };
 module.exports = {
