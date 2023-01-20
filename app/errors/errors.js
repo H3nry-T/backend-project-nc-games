@@ -17,7 +17,7 @@ exports.handleBadRequestErrors = (error, request, response, next) => {
       error.code === "23503" ||
       error.code === "23502")
   ) {
-    console.log(error);
+    // console.log(error);
     response.status(400).send({ error: error });
   } else {
     next(error);
