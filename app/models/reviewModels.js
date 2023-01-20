@@ -59,6 +59,12 @@ const fetchAllReviews = (query) => {
 };
 
 const fetchReviewById = (review_id) => {
+  if (isNaN(parseInt(review_id))) {
+    return Promise.reject({
+      code: 400,
+      msg: "bad request, review_id has to be an integer",
+    });
+  }
   const selectValues = [review_id];
   return db
     .query(
@@ -77,7 +83,7 @@ const fetchReviewById = (review_id) => {
       if (!review) {
         return Promise.reject({
           code: 404,
-          msg: "Not found, review_id doesn't exist in the database",
+          msg: "not found, review_id doesn't exist in the database",
         });
       } else {
         return review;
@@ -117,17 +123,47 @@ const insertCommentByReviewId = (reqBody, review_id) => {
   RETURNING *;
   `;
   const insertValues = [reqBody.body, review_id, reqBody.username];
-  return db.query(insertQuery, insertValues).then((result) => {
-    const postedComment = result.rows[0];
-    return postedComment;
-  });
+  if (!reqBody.hasOwnProperty("body") || !reqBody.hasOwnProperty("username")) {
+    return Promise.reject({
+      code: 400,
+      msg: "bad request, needs 2 keys body and username",
+    });
+  }
+
+  return db
+    .query("SELECT * FROM users")
+    .then((result) => {
+      const selectUsers = result.rows;
+      const registeredUsernames = selectUsers.map(
+        (userObj) => userObj.username
+      );
+      if (!registeredUsernames.includes(reqBody.username)) {
+        return Promise.reject({
+          code: 400,
+          msg: "bad request, that username is not registered in the database",
+        });
+      }
+      return db.query(insertQuery, insertValues);
+    })
+    .then((result) => {
+      const postedComment = result.rows[0];
+      return postedComment;
+    });
 };
 
 const updateReviewById = (reqBody, review_id) => {
   if (!Object.keys(reqBody).includes("incVotes")) {
-    return Promise.reject({ code: 400, msg: "missing an incVotes key" });
+    return Promise.reject({
+      code: 400,
+      msg: "bad request, incVotes key is missing",
+    });
   }
-
+  if (typeof reqBody.incVotes === "string") {
+    return Promise.reject({
+      code: 400,
+      msg: "bad request, incVotes must be an integer",
+    });
+  }
   const updateQuery = `
     UPDATE reviews
     SET votes = votes + $1

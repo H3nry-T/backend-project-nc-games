@@ -86,12 +86,21 @@ describe("RUN ALL TESTS", () => {
         .then(({ body }) => {
           expect(body.error).toEqual({
             code: 404,
-            msg: "Not found, review_id doesn't exist in the database",
+            msg: "not found, review_id doesn't exist in the database",
           });
         });
     });
     it("responds with an error code of 400-Bad request if the review_id is not an id", () => {
-      return request(app).get("/api/reviews/NotAnId").expect(400);
+      return request(app)
+        .get("/api/reviews/NotAnId")
+        .expect(400)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({
+            code: 400,
+            msg: "bad request, review_id has to be an integer",
+          });
+        });
     });
     it(`responds with 1 review object with these properties:
             review_id
@@ -135,7 +144,7 @@ describe("RUN ALL TESTS", () => {
         .then(({ body }) => {
           expect(body.error).toEqual({
             code: 404,
-            msg: "Not found, review_id doesn't exist in the database",
+            msg: "not found, review_id doesn't exist in the database",
           });
         });
     });
@@ -144,7 +153,10 @@ describe("RUN ALL TESTS", () => {
         .get("/api/reviews/NotAnId/comments")
         .expect(400)
         .then(({ body }) => {
-          expect(body.error).toEqual({ code: 400, msg: "Bad request" });
+          expect(body.error).toEqual({
+            code: 400,
+            msg: "bad request, review_id has to be an integer",
+          });
         });
     });
     it("responds with an empty comments array when valid review has no comments", () => {
@@ -216,7 +228,7 @@ describe("RUN ALL TESTS", () => {
           const error = response.body.error;
           expect(error).toEqual({
             code: 400,
-            msg: "Bad request the username is not registered with us",
+            msg: "bad request, that username is not registered in the database",
           });
         });
     });
@@ -231,7 +243,7 @@ describe("RUN ALL TESTS", () => {
           const error = response.body.error;
           expect(error).toEqual({
             code: 400,
-            msg: "Bad request must have username, body keys",
+            msg: "bad request, needs 2 keys body and username",
           });
         });
     });
@@ -247,7 +259,7 @@ describe("RUN ALL TESTS", () => {
           const error = response.body.error;
           expect(error).toEqual({
             code: 400,
-            msg: "Bad request must have username, body keys",
+            msg: "bad request, needs 2 keys body and username",
           });
         });
     });
@@ -264,7 +276,7 @@ describe("RUN ALL TESTS", () => {
           const error = response.body.error;
           expect(error).toEqual({
             code: 404,
-            msg: "Not found, review_id doesn't exist in the database",
+            msg: "not found, review_id doesn't exist in the database",
           });
         });
     });
@@ -310,7 +322,10 @@ describe("RUN ALL TESTS", () => {
         .expect(400)
         .then((response) => {
           const error = response.body.error;
-          expect(error).toEqual({ code: 400, msg: "missing an incVotes key" });
+          expect(error).toEqual({
+            code: 400,
+            msg: "bad request, incVotes key is missing",
+          });
         });
     });
     it("decline patch request with too many keys responds 400", () => {
@@ -323,7 +338,10 @@ describe("RUN ALL TESTS", () => {
         .expect(400)
         .then((response) => {
           const error = response.body.error;
-          expect(error).toEqual({ code: 400, msg: "missing an incVotes key" });
+          expect(error).toEqual({
+            code: 400,
+            msg: "bad request, incVotes key is missing",
+          });
         });
     });
     it("decline patch request with no keys responds 400", () => {
@@ -333,7 +351,10 @@ describe("RUN ALL TESTS", () => {
         .expect(400)
         .then((response) => {
           const error = response.body.error;
-          expect(error).toEqual({ code: 400, msg: "missing an incVotes key" });
+          expect(error).toEqual({
+            code: 400,
+            msg: "bad request, incVotes key is missing",
+          });
         });
     });
     it("decline patch request for invalid ids 404", () => {
@@ -347,12 +368,23 @@ describe("RUN ALL TESTS", () => {
           const error = response.body.error;
           expect(error).toEqual({
             code: 404,
-            msg: "Not found, review_id doesn't exist in the database",
+            msg: "not found, review_id doesn't exist in the database",
           });
         });
     });
     it("decline patch requests where incVotes is a string", () => {
       //NEED TO DO THIS
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({ incVotes: "string" })
+        .expect(400)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({
+            code: 400,
+            msg: "bad request, incVotes must be an integer",
+          });
+        });
     });
     it("should accept a valid patch request and respond with 200 satus code", () => {
       return request(app)

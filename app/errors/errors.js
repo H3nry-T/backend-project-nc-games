@@ -18,29 +18,7 @@ exports.handleBadRequestErrors = (error, request, response, next) => {
       error.code === "23502")
   ) {
     console.log(error);
-    if (error.code && error.msg) {
-      //SQL custom errors
-      response.status(400).send({ error: error });
-    } else if (error.routine === "ExecConstraints") {
-      //SQL cannot insert null values
-      response.status(400).send({
-        error: {
-          code: 400,
-          msg: "Bad request must have username, body keys",
-        },
-      });
-    } else if (error.routine === "ri_ReportViolation") {
-      //SQL violates foreign key
-      response.status(400).send({
-        error: {
-          code: 400,
-          msg: "Bad request the username is not registered with us",
-        },
-      });
-    } else {
-      //SQL any other error
-      response.status(400).send({ error: { code: 400, msg: "Bad request" } });
-    }
+    response.status(400).send({ error: error });
   } else {
     next(error);
   }
