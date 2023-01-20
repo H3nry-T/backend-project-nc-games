@@ -6,19 +6,9 @@
 
 The project is an API that allows for programmatic access to application data (game reviews). The API is designed to mimic a real-world backend service, such as Reddit, and will provide data to the front-end architecture. The database used in this project is PostgreSQL and it will be interacted with using the node-postgres library.
 
-### API endpoints:
+## API endpoints:
 
-<pre>
-    GET: /api //use this to find more info on the other endpoints
-    GET: /api/users
-    GET: /api/categories
-    GET: /api/reviews
-    GET: /api/reviews/:review_id
-    PATCH: /api/reviews/:review_id
-    GET: /api/reviews/:review_id/comments
-    POST: /api/reviews/review_id/comments
-    DELETE: /api/comments/:comment_id
-</pre>
+To get a list of all endpoints: <code>GET: /api</code>
 
 ## How to use:
 
