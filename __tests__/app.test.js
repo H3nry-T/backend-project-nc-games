@@ -351,6 +351,9 @@ describe("RUN ALL TESTS", () => {
           });
         });
     });
+    it("decline patch requests where incVotes is a string", () => {
+      //NEED TO DO THIS
+    });
     it("should accept a valid patch request and respond with 200 satus code", () => {
       return request(app)
         .patch("/api/reviews/1")
