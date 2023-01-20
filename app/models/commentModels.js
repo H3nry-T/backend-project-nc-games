@@ -10,6 +10,12 @@ exports.removeCommentById = (comment_id) => {
 };
 
 exports.fetchCommentByCommentId = (comment_id) => {
+  if (isNaN(parseInt(comment_id))) {
+    return Promise.reject({
+      code: 400,
+      msg: "bad request, comment_id has to be an integer",
+    });
+  }
   const selectQuery = `
       SELECT * FROM comments
       WHERE comment_id = $1
@@ -19,7 +25,7 @@ exports.fetchCommentByCommentId = (comment_id) => {
     if (!comment) {
       return Promise.reject({
         code: 404,
-        msg: "bad request, invalid comment_id",
+        msg: "not found, comment_id is not in our database",
       });
     }
     return comment;

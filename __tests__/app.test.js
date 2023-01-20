@@ -520,7 +520,7 @@ describe("RUN ALL TESTS", () => {
   });
 
   describe("12-DELETE/api/comments/:comment_id", () => {
-    it("should delete the comment from the database responds with 204", () => {
+    it("should respond 204 and comment is deleted from the database", () => {
       return request(app)
         .delete("/api/comments/1")
         .expect(204)
@@ -534,7 +534,7 @@ describe("RUN ALL TESTS", () => {
           });
         });
     });
-    it("should respond 404 if the comment_id is too high or invalid", () => {
+    it("should respond 404 if the comment_id doesn't exist in data is e.g 999999999999", () => {
       return request(app)
         .delete("/api/comments/100000")
         .expect(404)
@@ -542,17 +542,20 @@ describe("RUN ALL TESTS", () => {
           const error = response.body.error;
           expect(error).toEqual({
             code: 404,
-            msg: "bad request, invalid comment_id",
+            msg: "not found, comment_id is not in our database",
           });
         });
     });
-    it("should respond 400 if notAnid is passed as a parameter", () => {
+    it("should respond 400 if comment_id is e.g notAnId", () => {
       return request(app)
         .delete("/api/comments/notAnId")
         .expect(400)
         .then((response) => {
           const error = response.body.error;
-          expect(error).toEqual({ code: 400, msg: "Bad request" });
+          expect(error).toEqual({
+            code: 400,
+            msg: "bad request, comment_id has to be an integer",
+          });
         });
     });
   });
@@ -633,7 +636,6 @@ describe("RUN ALL TESTS", () => {
         commentPreviousVotes + reqBody.inc_votes
       );
     });
-
     it("should return 400 if passed in empty object or if the request body is not formatted properly", async () => {
       const response = await request(app)
         .patch("/api/comments/1")
@@ -656,15 +658,26 @@ describe("RUN ALL TESTS", () => {
         msg: "bad request, inc_votes must be an integer",
       });
     });
-    it("should return 404 when passed an invalid comment_id", async () => {
+    it("should return 404 when passed an invalid comment_id e.g 9999999", async () => {
       const response = await request(app)
-        .patch("/api/comments/10000")
+        .patch("/api/comments/100000")
         .send({ inc_votes: 30 })
         .expect(404);
       const error = response.body.error;
       expect(error).toEqual({
         code: 404,
-        msg: "bad request, invalid comment_id",
+        msg: "not found, comment_id is not in our database",
+      });
+    });
+    it("should return 400 when passed an invalid comment_id e.g notAnId", async () => {
+      const response = await request(app)
+        .patch("/api/comments/notAnId")
+        .send({ inc_votes: 30 })
+        .expect(400);
+      const error = response.body.error;
+      expect(error).toEqual({
+        code: 400,
+        msg: "bad request, comment_id has to be an integer",
       });
     });
   });
