@@ -540,7 +540,10 @@ describe("RUN ALL TESTS", () => {
         .expect(404)
         .then((response) => {
           const error = response.body.error;
-          expect(error).toEqual({ code: 404, msg: "Invalid comment_id" });
+          expect(error).toEqual({
+            code: 404,
+            msg: "bad request, invalid comment_id",
+          });
         });
     });
     it("should respond 400 if notAnid is passed as a parameter", () => {
@@ -606,6 +609,63 @@ describe("RUN ALL TESTS", () => {
             msg: "not found, maybe that username doesn't exist?",
           });
         });
+    });
+  });
+
+  describe("18-PATCH: /api/comments/:comment_id", () => {
+    it("should return 200 and updated comment", async () => {
+      const comment_id = "1";
+      const reqBody = { inc_votes: -9 };
+      //FIND THE COMMENT TO TEST
+      const comment = await db.query(
+        `SELECT * FROM comments WHERE comment_id = ${comment_id}`
+      );
+      const commentPreviousVotes = comment.rows[0].votes;
+      //UPDATE THE COMMENT
+      const response = await request(app)
+        .patch(`/api/comments/${comment_id}`)
+        .send(reqBody)
+        .expect(200);
+      //CHECK IF THE COMMENT UPDATES BY THE SPECIFIED AMOUNT
+      const updatedComment = response.body.updatedComment;
+      expect(updatedComment).toHaveProperty(
+        "votes",
+        commentPreviousVotes + reqBody.inc_votes
+      );
+    });
+
+    it("should return 400 if passed in empty object or if the request body is not formatted properly", async () => {
+      const response = await request(app)
+        .patch("/api/comments/1")
+        .send({ lakjsdf: 122 })
+        .expect(400);
+      const error = response.body.error;
+      expect(error).toEqual({
+        code: 400,
+        msg: "bad request, request body must have the key inc_votes",
+      });
+    });
+    it("should return 400 if passed in a string as inc votes", async () => {
+      const response = await request(app)
+        .patch("/api/comments/1")
+        .send({ inc_votes: "30" })
+        .expect(400);
+      const error = response.body.error;
+      expect(error).toEqual({
+        code: 400,
+        msg: "bad request, inc_votes must be an integer",
+      });
+    });
+    it("should return 404 when passed an invalid comment_id", async () => {
+      const response = await request(app)
+        .patch("/api/comments/10000")
+        .send({ inc_votes: 30 })
+        .expect(404);
+      const error = response.body.error;
+      expect(error).toEqual({
+        code: 404,
+        msg: "bad request, invalid comment_id",
+      });
     });
   });
 });
