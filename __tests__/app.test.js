@@ -84,7 +84,10 @@ describe("RUN ALL TESTS", () => {
         .get("/api/reviews/100000")
         .expect(404)
         .then(({ body }) => {
-          expect(body.error).toEqual({ code: 404, msg: "Not found" });
+          expect(body.error).toEqual({
+            code: 404,
+            msg: "Not found, review_id doesn't exist in the database",
+          });
         });
     });
     it("responds with an error code of 400-Bad request if the review_id is not an id", () => {
@@ -130,7 +133,10 @@ describe("RUN ALL TESTS", () => {
         .get("/api/reviews/100000/comments")
         .expect(404)
         .then(({ body }) => {
-          expect(body.error).toEqual({ code: 404, msg: "Not found" });
+          expect(body.error).toEqual({
+            code: 404,
+            msg: "Not found, review_id doesn't exist in the database",
+          });
         });
     });
     it("responds with an error code of 400-Bad request if the review_id is not an id", () => {
@@ -245,8 +251,22 @@ describe("RUN ALL TESTS", () => {
           });
         });
     });
-    it("should respond 404 when review_id is non existant", () => {
+    it("should respond 404 when posting to a non existant review_id ", () => {
       //PLEASE ADD THIS TEST VERY IMPORTANT
+      return request(app)
+        .post("/api/reviews/100000/comments")
+        .send({
+          username: "grumpy19",
+          body: "hello there! this is my review!!!",
+        })
+        .expect(404)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({
+            code: 404,
+            msg: "Not found, review_id doesn't exist in the database",
+          });
+        });
     });
     it("should respond with postedComment", () => {
       return request(app)
@@ -316,7 +336,7 @@ describe("RUN ALL TESTS", () => {
           expect(error).toEqual({ code: 400, msg: "missing an incVotes key" });
         });
     });
-    it("decline patch request for invalid ids", () => {
+    it("decline patch request for invalid ids 404", () => {
       return request(app)
         .patch("/api/reviews/10000")
         .send({
@@ -325,7 +345,10 @@ describe("RUN ALL TESTS", () => {
         .expect(404)
         .then((response) => {
           const error = response.body.error;
-          expect(error).toEqual({ code: 404, msg: "Not found" });
+          expect(error).toEqual({
+            code: 404,
+            msg: "Not found, review_id doesn't exist in the database",
+          });
         });
     });
     it("should accept a valid patch request and respond with 200 satus code", () => {

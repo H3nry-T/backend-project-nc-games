@@ -75,7 +75,10 @@ const fetchReviewById = (review_id) => {
     .then((result) => {
       const review = result.rows[0];
       if (!review) {
-        return Promise.reject({ code: 404, msg: "Not found" });
+        return Promise.reject({
+          code: 404,
+          msg: "Not found, review_id doesn't exist in the database",
+        });
       } else {
         return review;
       }

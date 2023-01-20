@@ -47,7 +47,10 @@ const getCommentsByReviewId = (request, response, next) => {
 const postCommentByReviewId = (request, response, next) => {
   const reqBody = request.body;
   const review_id = request.params.review_id;
-  return insertCommentByReviewId(reqBody, review_id)
+  return fetchReviewById(review_id)
+    .then(() => {
+      return insertCommentByReviewId(reqBody, review_id);
+    })
     .then((postedComment) => {
       response.status(201).send({ postedComment });
     })
