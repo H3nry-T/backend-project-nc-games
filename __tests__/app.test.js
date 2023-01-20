@@ -245,6 +245,9 @@ describe("RUN ALL TESTS", () => {
           });
         });
     });
+    it("should respond 404 when review_id is non existant", () => {
+      //PLEASE ADD THIS TEST VERY IMPORTANT
+    });
     it("should respond with postedComment", () => {
       return request(app)
         .post("/api/reviews/1/comments")
@@ -550,6 +553,32 @@ describe("RUN ALL TESTS", () => {
           for (const key in allEndpoints) {
             expect(allEndpoints[key]).toHaveProperty("description");
           }
+        });
+    });
+  });
+
+  describe("17-GET: /api/users/username", () => {
+    it("should return a user object with the following properties: username, avatar_url and name", () => {
+      return request(app)
+        .get("/api/users/dav3rid")
+        .expect(200)
+        .then((response) => {
+          const user = response.body.user;
+          expect(user).toHaveProperty("username");
+          expect(user).toHaveProperty("avatar_url");
+          expect(user).toHaveProperty("name");
+        });
+    });
+    it("should respond 404 for an invalid username", () => {
+      return request(app)
+        .get("/api/users/dav3reeeeeee123")
+        .expect(404)
+        .then((response) => {
+          const error = response.body.error;
+          expect(error).toEqual({
+            code: 404,
+            msg: "not found, maybe that username doesn't exist?",
+          });
         });
     });
   });

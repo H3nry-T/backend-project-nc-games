@@ -118,5 +118,17 @@
   },
   "DELETE /api/comments/comment_id": {
     "description": "serves a 204 no content status"
+  },
+  "GET /api/users/:username": {
+    "description": "serves a json of a user",
+    "exampleResponse": {
+      "user": {
+        "user": {
+          "username": "tickle122",
+          "name": "Tom Tickle",
+          "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+        }
+      }
+    }
   }
 }
