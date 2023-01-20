@@ -53,15 +53,9 @@ const fetchAllReviews = (query) => {
       } else {
         return Promise.reject({ code: 400, msg: "invalid order query" });
       }
-    }
+    } //ASC is default if there is no query.order
 
-    return db.query(selectQuery, queryValues).then((result) => {
-      if (result.rows) {
-        return result.rows;
-      } else if (result.rows.length === 0) {
-        return Promise.reject({ code: 204, msg: "there is no content" });
-      }
-    });
+    return db.query(selectQuery, queryValues).then((result) => result.rows);
   });
 };
 

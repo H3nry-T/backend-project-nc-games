@@ -1,13 +1,3 @@
-//204
-exports.handleNoContentErrors = (error, request, response, next) => {
-  if (error.code === 204) {
-    // console.log(error);
-    response.status(204).send({ error: error });
-  } else {
-    next(error);
-  }
-};
-
 //404
 exports.handleManualNotFoundErrors = (error, request, response, next) => {
   if (error.code === 404) {
@@ -28,7 +18,7 @@ exports.handleBadRequestErrors = (error, request, response, next) => {
       error.code === "23502")
   ) {
     // console.log(error);
-    if (error.hasOwnProperty("msg")) {
+    if (error.code && error.msg) {
       //SQL custom errors
       response.status(400).send({ error: error });
     } else if (error.routine === "ExecConstraints") {

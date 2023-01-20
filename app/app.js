@@ -15,9 +15,6 @@ app.use(express.json());
 
 app.use("/api", apiRouter);
 
-// 204
-app.use(handleNoContentErrors);
-
 //404 MANUAL
 app.use(handleManualNotFoundErrors);
 
