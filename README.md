@@ -16,7 +16,7 @@ To get a list of all endpoints: <code>GET: /api</code>
 
 run the following into a directory of your choice in the terminal:
 <br>
-<code>git clone https://github.com/H3nry-T/project-backend-games.git</code>
+<code>git clone https://github.com/H3nry-T/backend-project-nc-games.git</code>
 
 ### Dependencies:
 
