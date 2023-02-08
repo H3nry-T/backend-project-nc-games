@@ -133,6 +133,9 @@
   },
   "PATCH /api/comments/:comment_id": {
     "description": "serves a json of the updated comment",
+    "requestBody": {
+      "inc_votes": 1
+    },
     "exampleResponse": {
       "updatedComment": {
         "comment_id": 4,
